@@ -392,24 +392,30 @@ export function openDrugModal(drugId) {
           </div>
         </div>
 
-        <!-- Tab Controls -->
+        <!-- Tab Controls (Đầy đủ chuẩn 7 Phần của Dược thư) -->
         <div class="flex items-center border-b border-slate-200 bg-slate-50 px-4 sm:px-6 overflow-x-auto text-xs sm:text-sm font-semibold text-slate-600 gap-1.5 shrink-0">
-          <button onclick="window.switchDrugTab('general')" id="tab-btn-general" class="drug-tab-btn active px-3.5 py-3 border-b-2 border-teal-600 text-teal-700 whitespace-nowrap cursor-pointer">
+          <button onclick="window.switchDrugTab('general')" id="tab-btn-general" class="drug-tab-btn active px-3 py-3 border-b-2 border-teal-600 text-teal-700 whitespace-nowrap cursor-pointer">
             1. Chỉ định & Liều
           </button>
-          <button onclick="window.switchDrugTab('renal')" id="tab-btn-renal" class="drug-tab-btn px-3.5 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
+          <button onclick="window.switchDrugTab('renal')" id="tab-btn-renal" class="drug-tab-btn px-3 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
             2. Chỉnh Thận/Gan
           </button>
-          <button onclick="window.switchDrugTab('safety')" id="tab-btn-safety" class="drug-tab-btn px-3.5 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
-            3. Cảnh báo & ADR
+          <button onclick="window.switchDrugTab('administration')" id="tab-btn-administration" class="drug-tab-btn px-3 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
+            3. Cách dùng & Pha truyền
           </button>
-          <button onclick="window.switchDrugTab('administration')" id="tab-btn-administration" class="drug-tab-btn px-3.5 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
-            4. Cách dùng & LS
+          <button onclick="window.switchDrugTab('safety')" id="tab-btn-safety" class="drug-tab-btn px-3 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
+            4. Cảnh báo & Thai kỳ
           </button>
-          <button onclick="window.switchDrugTab('pdf')" id="tab-btn-pdf" class="drug-tab-btn px-4 py-2.5 my-1 rounded-xl whitespace-nowrap flex items-center gap-1.5 font-black text-white bg-rose-600 hover:bg-rose-700 shadow-md transition-all cursor-pointer ring-2 ring-rose-400/50">
-            <i data-lucide="file-text" class="w-4 h-4 text-white"></i>
-            <span>PHẦN 7: TÀI LIỆU PDF</span>
-            <span class="ml-1 px-1.5 py-0.2 bg-white text-rose-700 text-[11px] font-black rounded-full shadow-2xs">
+          <button onclick="window.switchDrugTab('adr')" id="tab-btn-adr" class="drug-tab-btn px-3 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer font-bold text-rose-700 hover:text-rose-900">
+            5. Tác dụng phụ (ADR)
+          </button>
+          <button onclick="window.switchDrugTab('clinical')" id="tab-btn-clinical" class="drug-tab-btn px-3 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer font-bold text-amber-700 hover:text-amber-900">
+            6. Dược lâm sàng & TDM
+          </button>
+          <button onclick="window.switchDrugTab('pdf')" id="tab-btn-pdf" class="drug-tab-btn px-3.5 py-2 my-1 rounded-xl whitespace-nowrap flex items-center gap-1.5 font-black text-white bg-rose-600 hover:bg-rose-700 shadow-md transition-all cursor-pointer ring-2 ring-rose-400/50">
+            <i data-lucide="file-text" class="w-3.5 h-3.5 text-white"></i>
+            <span>7. TÀI LIỆU PDF</span>
+            <span class="ml-1 px-1.5 py-0.2 bg-white text-rose-700 text-[10px] font-black rounded-full shadow-2xs">
               ${drug.attachments ? drug.attachments.length : 0}
             </span>
           </button>
@@ -537,40 +543,44 @@ export function openDrugModal(drugId) {
             </div>
           </div>
 
-          <!-- TAB 3: SAFETY, ADR & PREGNANCY -->
+          <!-- TAB 3: CÁCH DÙNG & PHA TRUYỀN -->
+          <div id="tab-content-administration" class="hidden space-y-5">
+            <div class="bg-teal-50/60 border border-teal-200 rounded-xl p-4">
+              <h5 class="font-bold text-teal-950 text-sm flex items-center gap-2 mb-2">
+                <i data-lucide="syringe" class="w-4 h-4 text-teal-700"></i>
+                3.1 Hướng dẫn pha truyền & Đường dùng chi tiết
+              </h5>
+              <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">${drug.administration}</p>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <h5 class="font-bold text-slate-900 text-sm flex items-center gap-2 mb-2">
+                <i data-lucide="pill" class="w-4 h-4 text-blue-600"></i>
+                3.2 Dạng bào chế & Đường dùng chuẩn
+              </h5>
+              <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">
+                <strong>Dạng bào chế:</strong> ${drug.dosageForm || "Theo danh mục Dược thư Quốc gia"}<br>
+                <strong>Nhóm dược lý (ATC):</strong> ${drug.atcCode || drug.atcGroup || "Chưa phân loại"}
+              </p>
+            </div>
+          </div>
+
+          <!-- TAB 4: CẢNH BÁO & THAI KỲ -->
           <div id="tab-content-safety" class="hidden space-y-5">
             ${drug.blackBoxWarning ? `
               <div class="bg-rose-50 border-2 border-rose-500 rounded-xl p-4">
                 <div class="flex items-center gap-2 text-rose-800 font-bold mb-1 uppercase tracking-wider text-xs">
                   <i data-lucide="shield-alert" class="w-5 h-5 text-rose-600"></i>
-                  Cảnh báo Hộp đen (Black Box Warning)
+                  4.1 Cảnh báo quan trọng / Hộp đen (Black Box Warning)
                 </div>
                 <p class="text-rose-950 font-medium text-xs sm:text-sm leading-relaxed">${drug.blackBoxWarning}</p>
               </div>
             ` : ""}
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <h5 class="font-bold text-slate-900 text-sm flex items-center gap-1.5 mb-2">
-                  <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600"></i>
-                  Tác dụng không mong muốn thường gặp
-                </h5>
-                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">${drug.adr.common}</p>
-              </div>
-
-              <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <h5 class="font-bold text-rose-900 text-sm flex items-center gap-1.5 mb-2">
-                  <i data-lucide="flame" class="w-4 h-4 text-rose-600"></i>
-                  Tác dụng phụ nghiêm trọng (Cần báo ngay)
-                </h5>
-                <p class="text-xs sm:text-sm text-rose-800/90 leading-relaxed">${drug.adr.serious}</p>
-              </div>
-            </div>
-
             <div class="bg-indigo-50/60 border border-indigo-200 rounded-xl p-4">
               <h5 class="font-bold text-indigo-950 text-sm mb-2 flex items-center gap-2">
                 <i data-lucide="heart-pulse" class="w-4 h-4 text-indigo-600"></i>
-                Phụ nữ mang thai và Cho con bú
+                4.2 Phụ nữ mang thai và Thời kỳ cho con bú
               </h5>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
                 <div>
@@ -587,32 +597,101 @@ export function openDrugModal(drugId) {
             </div>
           </div>
 
-          <!-- TAB 4: ADMINISTRATION & PEARLS -->
-          <div id="tab-content-administration" class="hidden space-y-5">
-            <div class="bg-teal-50/60 border border-teal-200 rounded-xl p-4">
-              <h5 class="font-bold text-teal-950 text-sm flex items-center gap-2 mb-2">
-                <i data-lucide="syringe" class="w-4 h-4 text-teal-700"></i>
-                Hướng dẫn pha truyền & Đường dùng chi tiết
+          <!-- TAB 5: MỤC 5. TÁC DỤNG KHÔNG MONG MUỐN (ADR) -->
+          <div id="tab-content-adr" class="hidden space-y-5">
+            <div class="p-4 bg-rose-50/90 rounded-2xl border border-rose-200 flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-rose-600 text-white flex items-center justify-center font-bold shadow-xs shrink-0">
+                  <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="text-sm sm:text-base font-black text-rose-950">Mục 5: Tác Dụng Không Mong Muốn (ADR) & Cảnh Giác Dược</h4>
+                  <p class="text-[11px] text-rose-800">Theo dõi, phát hiện sớm và xử trí các biến cố bất lợi của thuốc</p>
+                </div>
+              </div>
+              <button onclick="window.closeDrugModal(); window.location.hash = '#adr';" 
+                class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-700 hover:text-rose-800 bg-white hover:bg-rose-50 border border-rose-300 px-3 py-1.5 rounded-xl transition-all shadow-2xs cursor-pointer shrink-0">
+                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                <span>Gửi báo cáo ADR</span>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <h5 class="font-bold text-slate-900 text-sm flex items-center gap-1.5 mb-2">
+                  <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600"></i>
+                  5.1 Tác dụng không mong muốn thường gặp
+                </h5>
+                <div class="text-xs sm:text-sm text-slate-700 leading-relaxed bg-white p-3.5 rounded-lg border border-slate-100">${drug.adr.common || "Chưa ghi nhận biến cố bất lợi thường gặp đặc biệt."}</div>
+              </div>
+
+              <div class="bg-rose-50/60 p-4 rounded-xl border border-rose-200">
+                <h5 class="font-bold text-rose-900 text-sm flex items-center gap-1.5 mb-2">
+                  <i data-lucide="flame" class="w-4 h-4 text-rose-600"></i>
+                  5.2 Tác dụng phụ nghiêm trọng (Cần cấp cứu & báo ngay)
+                </h5>
+                <div class="text-xs sm:text-sm text-rose-900 leading-relaxed bg-white p-3.5 rounded-lg border border-rose-100 font-medium">${drug.adr.serious || "Theo dõi các phản ứng quá mẫn, sốc phản vệ hoặc độc tính cơ quan."}</div>
+              </div>
+            </div>
+
+            <div class="bg-amber-50/60 border border-amber-200 rounded-xl p-4 text-xs sm:text-sm text-amber-950">
+              <h5 class="font-bold flex items-center gap-1.5 mb-1 text-amber-900">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-amber-600"></i>
+                5.3 Hướng dẫn xử trí & Phản hồi Dược lâm sàng:
               </h5>
-              <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">${drug.administration}</p>
+              <p class="leading-relaxed text-slate-700">Khi bệnh nhân xuất hiện các triệu chứng nghi ngờ ADR, bác sĩ/điều dưỡng xử trí triệu chứng khẩn cấp theo phác đồ, đánh giá thang Naranjo và báo cáo về Tổ Dược Lâm Sàng (Khoa Dược BVĐK tỉnh Hưng Yên - Máy lẻ 406) để tổng hợp báo cáo Trung tâm DI & ADR Quốc gia.</p>
+            </div>
+          </div>
+
+          <!-- TAB 6: MỤC 6. DƯỢC LÂM SÀNG & TDM -->
+          <div id="tab-content-clinical" class="hidden space-y-5">
+            <div class="p-4 bg-teal-50/90 rounded-2xl border border-teal-200 flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-teal-700 text-white flex items-center justify-center font-bold shadow-xs shrink-0">
+                  <i data-lucide="stethoscope" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="text-sm sm:text-base font-black text-teal-950">Mục 6: Lưu Ý Dược Lâm Sàng Chuyên Sâu & Giám Sát TDM</h4>
+                  <p class="text-[11px] text-teal-800">Tổ Dược Lâm Sàng - Thông Tin Thuốc BVĐK Tỉnh Hưng Yên</p>
+                </div>
+              </div>
+              <button onclick="window.closeDrugModal(); window.location.hash = '#consultation';" 
+                class="inline-flex items-center gap-1.5 text-xs font-bold text-teal-700 hover:text-teal-800 bg-white hover:bg-teal-50 border border-teal-300 px-3 py-1.5 rounded-xl transition-all shadow-2xs cursor-pointer shrink-0">
+                <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+                <span>Gửi câu hỏi hội chẩn</span>
+              </button>
+            </div>
+
+            <div class="bg-amber-50/70 border border-amber-300/80 rounded-xl p-4">
+              <h5 class="font-bold text-amber-950 text-sm flex items-center gap-2 mb-2">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-700"></i>
+                6.1 Lưu ý Dược lâm sàng chuyên sâu (Clinical Pearls)
+              </h5>
+              <div class="text-slate-800 text-xs sm:text-sm leading-relaxed font-medium bg-white p-3.5 rounded-xl border border-amber-200/70 shadow-2xs">${drug.clinicalPearls || "Tuân thủ đúng liều lượng, đường dùng và theo dõi đáp ứng lâm sàng của bệnh nhân."}</div>
             </div>
 
             ${drug.tdmTarget ? `
               <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-4">
-                <h5 class="font-bold text-blue-950 text-sm flex items-center gap-2 mb-1.5">
+                <h5 class="font-bold text-blue-950 text-sm flex items-center gap-2 mb-2">
                   <i data-lucide="gauge" class="w-4 h-4 text-blue-700"></i>
-                  Giám sát nồng độ thuốc trong máu (TDM Target)
+                  6.2 Giám sát nồng độ thuốc trong máu (TDM Target & Khoảng điều trị)
                 </h5>
-                <p class="text-slate-700 text-xs sm:text-sm leading-relaxed">${drug.tdmTarget}</p>
+                <div class="text-slate-800 text-xs sm:text-sm leading-relaxed font-medium bg-white p-3.5 rounded-xl border border-blue-200/70 shadow-2xs">${drug.tdmTarget}</div>
               </div>
-            ` : ""}
+            ` : `
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-500">
+                <span class="font-bold text-slate-700">6.2 Giám sát nồng độ thuốc (TDM):</span> Thuốc không nằm trong danh mục bắt buộc định lượng nồng độ thường quy (TDM); theo dõi hiệu quả điều trị và độc tính qua các chỉ số cận lâm sàng định kỳ.
+              </div>
+            `}
 
-            <div class="bg-amber-50/70 border border-amber-300/80 rounded-xl p-4">
-              <h5 class="font-bold text-amber-950 text-sm flex items-center gap-2 mb-1.5">
-                <i data-lucide="sparkles" class="w-4 h-4 text-amber-700"></i>
-                Lưu ý Dược lâm sàng chuyên sâu (Clinical Pearls)
+            <div class="bg-indigo-50/60 border border-indigo-200 rounded-xl p-4 text-xs sm:text-sm">
+              <h5 class="font-bold text-indigo-950 flex items-center gap-2 mb-1.5">
+                <i data-lucide="activity" class="w-4 h-4 text-indigo-700"></i>
+                6.3 Tương tác thuốc và Tương dung tiêm truyền
               </h5>
-              <p class="text-slate-800 text-xs sm:text-sm leading-relaxed font-medium">${drug.clinicalPearls}</p>
+              <p class="text-slate-700 leading-relaxed">
+                Để kiểm tra khả năng tương tác của <strong>${drug.name}</strong> với các thuốc khác trong phác đồ điều trị của bệnh nhân, vui lòng sử dụng công cụ <strong>Tương tác thuốc</strong> và <strong>Tương dung tiêm truyền IV</strong> trên thanh menu.
+              </p>
             </div>
           </div>
 
@@ -773,17 +852,17 @@ export function openDrugModal(drugId) {
 }
 
 export function switchDrugTab(tabName) {
-  const tabs = ["general", "renal", "safety", "administration", "pdf"];
+  const tabs = ["general", "renal", "administration", "safety", "adr", "clinical", "pdf"];
   tabs.forEach(t => {
     const btn = document.getElementById(`tab-btn-${t}`);
     const content = document.getElementById(`tab-content-${t}`);
     if (btn && content) {
       if (t === "pdf") {
         if (t === tabName) {
-          btn.className = "drug-tab-btn px-4 py-2.5 my-1 rounded-xl whitespace-nowrap flex items-center gap-1.5 font-black text-white bg-rose-700 shadow-md ring-2 ring-rose-400 cursor-pointer";
+          btn.className = "drug-tab-btn px-3.5 py-2 my-1 rounded-xl whitespace-nowrap flex items-center gap-1.5 font-black text-white bg-rose-700 shadow-md ring-2 ring-rose-400 cursor-pointer";
           content.classList.remove("hidden");
         } else {
-          btn.className = "drug-tab-btn px-4 py-2.5 my-1 rounded-xl whitespace-nowrap flex items-center gap-1.5 font-black text-rose-800 bg-rose-100 hover:bg-rose-200 border border-rose-300 transition-all cursor-pointer";
+          btn.className = "drug-tab-btn px-3.5 py-2 my-1 rounded-xl whitespace-nowrap flex items-center gap-1.5 font-black text-white bg-rose-600 hover:bg-rose-700 shadow-sm transition-all cursor-pointer ring-2 ring-rose-400/50";
           content.classList.add("hidden");
         }
       } else {
