@@ -1,0 +1,17 @@
+﻿# Temporary & backup files
+*.bak
+*.bak_*
+*.tmp
+*.log
+
+# Bundles & Zip archives
+*.zip
+
+# Operating System files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE / Editor configuration
+.vscode/
+.idea/
