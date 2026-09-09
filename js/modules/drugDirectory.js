@@ -159,14 +159,7 @@ export function renderDrugList() {
         </button>
       `;
     } else {
-      adminHeaderActions.innerHTML = `
-        <button onclick="window.fastLogin('admin'); window.renderDrugList();" 
-          title="Bật quyền Quản trị viên để thêm thuốc, sửa chuyên luận và đính kèm file PDF"
-          class="inline-flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-300 font-bold text-xs px-3 py-1.5 rounded-xl shadow-2xs transition-all cursor-pointer">
-          <i data-lucide="shield-check" class="w-4 h-4 text-rose-600"></i>
-          <span>Bật Quyền Admin (Thêm / Sửa / Đính Kèm PDF)</span>
-        </button>
-      `;
+      adminHeaderActions.innerHTML = "";
     }
   }
 
@@ -254,12 +247,14 @@ export function renderDrugList() {
           ${drug.dosageForm}
         </span>
         <div class="flex items-center gap-1.5">
-          <button onclick="if (!window.getCurrentUser || window.getCurrentUser()?.role !== 'admin') { window.fastLogin('admin'); } window.openEditDrugModal('${drug.id}'); setTimeout(() => document.getElementById('formSection7')?.scrollIntoView({behavior:'smooth', block:'start'}), 300);" 
-            title="Chỉnh sửa chuyên luận và Đính kèm file PDF"
-            class="inline-flex items-center gap-1 text-xs font-bold text-amber-800 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-300 px-2.5 py-1.5 rounded-xl transition-all shadow-2xs cursor-pointer">
-            <i data-lucide="edit-3" class="w-3.5 h-3.5 text-amber-600"></i>
-            <span>Sửa / Đính kèm PDF</span>
-          </button>
+          ${isAdmin ? `
+            <button onclick="window.openEditDrugModal('${drug.id}'); setTimeout(() => document.getElementById('formSection7')?.scrollIntoView({behavior:'smooth', block:'start'}), 300);" 
+              title="Chỉnh sửa chuyên luận và Đính kèm file PDF (Admin)"
+              class="inline-flex items-center gap-1 text-xs font-bold text-amber-800 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-300 px-2.5 py-1.5 rounded-xl transition-all shadow-2xs cursor-pointer">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5 text-amber-600"></i>
+              <span>Sửa / Đính kèm PDF</span>
+            </button>
+          ` : ''}
           <button onclick="window.viewDrugDetails('${drug.id}')" 
             class="inline-flex items-center gap-1 text-xs font-bold text-teal-700 hover:text-teal-800 bg-white hover:bg-teal-50 border border-teal-300 px-3 py-1.5 rounded-xl transition-all shadow-2xs cursor-pointer">
             <span>Xem chuyên luận</span>
@@ -383,12 +378,14 @@ export function openDrugModal(drugId) {
               <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
               <span>Phần 7: File PDF (${drug.attachments ? drug.attachments.length : 0})</span>
             </button>
-            <button onclick="if (!window.getCurrentUser || window.getCurrentUser()?.role !== 'admin') { window.fastLogin('admin'); } window.closeDrugModal(); window.openEditDrugModal('${drug.id}'); setTimeout(() => document.getElementById('formSection7')?.scrollIntoView({behavior:'smooth', block:'start'}), 300);" 
-              title="Mở Form đính kèm tài liệu PDF (Admin)"
-              class="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs shadow-md transition-all cursor-pointer">
-              <i data-lucide="upload" class="w-4 h-4"></i>
-              <span>Đính kèm PDF / Sửa</span>
-            </button>
+            ${isAdmin ? `
+              <button onclick="window.closeDrugModal(); window.openEditDrugModal('${drug.id}'); setTimeout(() => document.getElementById('formSection7')?.scrollIntoView({behavior:'smooth', block:'start'}), 300);" 
+                title="Mở Form đính kèm tài liệu PDF (Admin)"
+                class="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs shadow-md transition-all cursor-pointer">
+                <i data-lucide="upload" class="w-4 h-4"></i>
+                <span>Đính kèm PDF / Sửa</span>
+              </button>
+            ` : ''}
             <button onclick="window.closeDrugModal()" class="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors">
               <i data-lucide="x" class="w-6 h-6"></i>
             </button>
@@ -489,11 +486,13 @@ export function openDrugModal(drugId) {
                   <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                   <span>Xem Phần 7 (PDF)</span>
                 </button>
-                <button onclick="if (!window.getCurrentUser || window.getCurrentUser()?.role !== 'admin') { window.fastLogin('admin'); } window.closeDrugModal(); window.openEditDrugModal('${drug.id}'); setTimeout(() => document.getElementById('formSection7')?.scrollIntoView({behavior:'smooth', block:'start'}), 300);" 
-                  class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-xs shadow-xs transition-colors cursor-pointer flex items-center gap-1">
-                  <i data-lucide="upload" class="w-3.5 h-3.5 text-rose-300"></i>
-                  <span>+ Đính kèm file</span>
-                </button>
+                ${isAdmin ? `
+                  <button onclick="window.closeDrugModal(); window.openEditDrugModal('${drug.id}'); setTimeout(() => document.getElementById('formSection7')?.scrollIntoView({behavior:'smooth', block:'start'}), 300);" 
+                    class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-xs shadow-xs transition-colors cursor-pointer flex items-center gap-1">
+                    <i data-lucide="upload" class="w-3.5 h-3.5 text-rose-300"></i>
+                    <span>+ Đính kèm file (Admin)</span>
+                  </button>
+                ` : ''}
               </div>
             </div>
           </div>
@@ -635,11 +634,10 @@ export function openDrugModal(drugId) {
                     <span>Tải lên & Đính kèm file PDF cho thuốc này ngay (Admin)</span>
                   </button>
                 ` : `
-                  <button onclick="window.closeDrugModal(); window.fastLogin('admin'); setTimeout(() => window.openEditDrugModal('${drug.id}'), 400)" 
-                    class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-xs transition-colors cursor-pointer">
-                    <i data-lucide="lock" class="w-4 h-4 text-amber-400"></i>
-                    <span>Đăng nhập quyền Admin để đính kèm tài liệu PDF</span>
-                  </button>
+                  <div class="inline-flex items-center gap-2 text-slate-500 text-xs bg-white border border-slate-200 px-4 py-2 rounded-xl">
+                    <i data-lucide="info" class="w-4 h-4 text-teal-600"></i>
+                    <span>Tài liệu chuyên môn đang được Quản trị viên Khoa Dược cập nhật bổ sung.</span>
+                  </div>
                 `}
               </div>
             ` : `

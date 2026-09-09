@@ -162,11 +162,33 @@ export function handleLogout() {
   localStorage.removeItem(CONFIG.STORAGE_KEYS.AUTH_USER);
   localStorage.removeItem("clinicalrx_auth_user_v2");
   closeAdminPanelModal();
+  closeUserProfileModal();
+  closeUserDropdown();
+
+  // Đóng mobile drawer nếu đang mở
+  const drawer = document.getElementById("mobileMenuDrawer");
+  if (drawer && !drawer.classList.contains("hidden")) {
+    drawer.classList.add("hidden");
+  }
+
   renderHeaderAuthUI();
   if (window.renderDrugList) {
     try { window.renderDrugList(); } catch (err) { console.warn(err); }
   }
-  showToast("Đã đăng xuất khỏi hệ thống.", "info");
+  showToast("Đã đăng xuất thành công khỏi hệ thống.", "success");
+}
+
+export function closeUserDropdown() {
+  const menu = document.getElementById("userDropdownMenu");
+  if (menu && !menu.classList.contains("hidden")) {
+    menu.classList.add("hidden");
+  }
+}
+
+export function toggleUserDropdown(e) {
+  if (e) e.stopPropagation();
+  const menu = document.getElementById("userDropdownMenu");
+  if (menu) menu.classList.toggle("hidden");
 }
 
 export function renderHeaderAuthUI() {
@@ -174,71 +196,123 @@ export function renderHeaderAuthUI() {
     loadSavedUserSession();
   }
   const container = document.getElementById("authHeaderContainer") || document.getElementById("headerAuthArea");
-  if (!container) return;
+  const mobileContainer = document.getElementById("authMobileDrawerContainer");
 
-  if (!currentUser) {
-    container.innerHTML = `
-      <button onclick="window.openLoginModal()" 
-        class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md transition-all shrink-0 cursor-pointer">
-        <i data-lucide="log-in" class="w-4 h-4"></i>
-        <span>ĐĂNG NHẬP</span>
-      </button>
-    `;
-  } else {
-    const isAdmin = currentUser.role === "admin";
-    container.innerHTML = `
-      <div class="flex items-center gap-2 shrink-0">
-        ${isAdmin ? `
-          <!-- Nút truy cập nhanh trực tiếp Trung tâm Quản trị cho Admin -->
-          <button onclick="window.openAdminPanelModal()" 
-            class="inline-flex items-center gap-1.5 bg-rose-700 hover:bg-rose-800 text-white px-3 py-1.5 rounded-xl text-xs font-black shadow-md border border-rose-500 transition-all cursor-pointer">
-            <i data-lucide="shield-check" class="w-4 h-4 text-rose-200"></i>
-            <span class="hidden sm:inline">⚙️ TRANG QUẢN TRỊ</span>
-            <span class="sm:hidden">⚙️ ADMIN</span>
+  // 1. Cập nhật Header Auth Container (Desktop / Laptop / Tablet)
+  if (container) {
+    if (!currentUser) {
+      container.innerHTML = `
+        <button onclick="window.openLoginModal()" 
+          class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-xl shadow-md transition-all shrink-0 cursor-pointer">
+          <i data-lucide="log-in" class="w-4 h-4"></i>
+          <span>ĐĂNG NHẬP</span>
+        </button>
+      `;
+    } else {
+      const isAdmin = currentUser.role === "admin";
+      container.innerHTML = `
+        <div class="flex items-center gap-2 shrink-0">
+          ${isAdmin ? `
+            <!-- Nút truy cập nhanh trực tiếp Trung tâm Quản trị cho Admin -->
+            <button onclick="window.openAdminPanelModal()" 
+              class="inline-flex items-center gap-1.5 bg-rose-700 hover:bg-rose-800 text-white px-3 py-1.5 rounded-xl text-xs font-black shadow-md border border-rose-500 transition-all cursor-pointer">
+              <i data-lucide="shield-check" class="w-4 h-4 text-rose-200"></i>
+              <span class="hidden sm:inline">⚙️ TRANG QUẢN TRỊ</span>
+              <span class="sm:hidden">⚙️ ADMIN</span>
+            </button>
+          ` : ''}
+
+          <!-- Dropdown người dùng -->
+          <div class="relative inline-block text-left" id="userDropdownWrapper">
+            <button onclick="window.toggleUserDropdown(event)" 
+              class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-800 text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-xl border border-slate-200 shadow-xs transition-all cursor-pointer">
+              <div class="w-6 h-6 rounded-md ${isAdmin ? 'bg-rose-600' : 'bg-teal-600'} text-white text-xs font-bold flex items-center justify-center">
+                ${currentUser.avatar}
+              </div>
+              <span class="max-w-[120px] truncate hidden md:inline">${currentUser.fullName}</span>
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${currentUser.roleBadgeClass}">
+                ${currentUser.roleLabel}
+              </span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+            </button>
+
+            <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 text-xs animate-fade-in">
+              <div class="px-3.5 py-2.5 border-b border-slate-100 bg-slate-50/60">
+                <p class="font-bold text-slate-900 text-xs">${currentUser.fullName}</p>
+                <p class="text-[11px] text-slate-500 truncate">${currentUser.department}</p>
+                <span class="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${currentUser.roleBadgeClass}">
+                  ${currentUser.roleLabel}
+                </span>
+              </div>
+              ${isAdmin ? `
+                <button onclick="window.openAdminPanelModal(); window.closeUserDropdown();" class="w-full text-left px-3.5 py-2 text-rose-700 font-bold hover:bg-rose-50 flex items-center gap-2 cursor-pointer transition-colors">
+                  <i data-lucide="shield-check" class="w-4 h-4 text-rose-600"></i>
+                  <span>Mở Trung tâm Quản trị (Admin)</span>
+                </button>
+              ` : ''}
+              <button onclick="window.openUserProfileModal(); window.closeUserDropdown();" class="w-full text-left px-3.5 py-2 text-slate-700 hover:bg-slate-50 flex items-center gap-2 cursor-pointer transition-colors">
+                <i data-lucide="user" class="w-4 h-4 text-slate-500"></i>
+                <span>Thông tin cán bộ y tế</span>
+              </button>
+              <div class="border-t border-slate-100 my-1"></div>
+              <button onclick="window.handleLogout()" class="w-full text-left px-3.5 py-2 text-rose-600 hover:bg-rose-50 flex items-center gap-2 font-bold cursor-pointer transition-colors">
+                <i data-lucide="log-out" class="w-4 h-4 text-rose-600"></i>
+                <span>Đăng xuất khỏi hệ thống</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Nút Đăng xuất trực tiếp nhanh trên thanh tiêu đề -->
+          <button onclick="window.handleLogout()" title="Đăng xuất tài khoản" 
+            class="p-2 rounded-xl text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-colors cursor-pointer shrink-0" aria-label="Đăng xuất">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
           </button>
-        ` : ''}
+        </div>
+      `;
+    }
+  }
 
-        <!-- Dropdown người dùng -->
-        <div class="relative inline-block text-left">
-          <button onclick="window.toggleUserDropdown()" 
-            class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-800 text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-xl border border-slate-200 shadow-xs transition-all cursor-pointer">
-            <div class="w-6 h-6 rounded-md ${isAdmin ? 'bg-rose-600' : 'bg-teal-600'} text-white text-xs font-bold flex items-center justify-center">
+  // 2. Cập nhật Mobile Drawer Auth Container (Dành riêng cho màn hình di động)
+  if (mobileContainer) {
+    if (!currentUser) {
+      mobileContainer.innerHTML = `
+        <button onclick="window.openLoginModal()" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-xs">
+          <i data-lucide="log-in" class="w-4 h-4"></i>
+          <span>ĐĂNG NHẬP (ADMIN / BÁC SĨ)</span>
+        </button>
+      `;
+    } else {
+      const isAdmin = currentUser.role === "admin";
+      mobileContainer.innerHTML = `
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl ${isAdmin ? 'bg-rose-600' : 'bg-teal-600'} text-white text-xs font-bold flex items-center justify-center shadow-xs shrink-0">
               ${currentUser.avatar}
             </div>
-            <span class="max-w-[120px] truncate hidden md:inline">${currentUser.fullName}</span>
-            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${currentUser.roleBadgeClass}">
-              ${currentUser.roleLabel}
-            </span>
-            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
-          </button>
-
-          <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 text-xs">
-            <div class="px-3 py-2 border-b border-slate-100">
-              <p class="font-bold text-slate-900">${currentUser.fullName}</p>
-              <p class="text-[11px] text-slate-500 truncate">${currentUser.department}</p>
+            <div class="flex-1 min-w-0">
+              <p class="font-bold text-slate-800 text-xs truncate">${currentUser.fullName}</p>
+              <p class="text-[11px] text-slate-500 truncate">${currentUser.roleLabel} · ${currentUser.department}</p>
             </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-200">
             ${isAdmin ? `
-              <button onclick="window.openAdminPanelModal()" class="w-full text-left px-3 py-2 text-rose-700 font-bold hover:bg-rose-50 flex items-center gap-2 cursor-pointer">
-                <i data-lucide="shield-check" class="w-4 h-4 text-rose-600"></i>
-                <span>Mở Trung tâm Quản trị (Admin)</span>
+              <button onclick="window.openAdminPanelModal()" class="col-span-2 py-2 px-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-xs transition-colors">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> ⚙️ Quản trị Admin
               </button>
             ` : ''}
-            <button onclick="window.openUserProfileModal()" class="w-full text-left px-3 py-2 text-slate-700 hover:bg-slate-50 flex items-center gap-2 cursor-pointer">
-              <i data-lucide="user" class="w-4 h-4 text-slate-500"></i>
-              <span>Thông tin cán bộ</span>
+            <button onclick="window.openUserProfileModal()" class="py-2 px-3 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded-lg border border-slate-200 text-xs flex items-center justify-center gap-1.5 transition-colors">
+              <i data-lucide="user" class="w-3.5 h-3.5"></i> Hồ sơ
             </button>
-            <div class="border-t border-slate-100 my-1"></div>
-            <button onclick="window.handleLogout()" class="w-full text-left px-3 py-2 text-rose-600 hover:bg-rose-50 flex items-center gap-2 font-semibold cursor-pointer">
-              <i data-lucide="log-out" class="w-4 h-4 text-rose-600"></i>
-              <span>Đăng xuất</span>
+            <button onclick="window.handleLogout()" class="py-2 px-3 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-lg border border-rose-200 text-xs flex items-center justify-center gap-1.5 transition-colors">
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Đăng xuất
             </button>
           </div>
         </div>
-      </div>
-    `;
+      `;
+    }
   }
 
-  // Cập nhật nút Hero Banner
+  // 3. Cập nhật nút Hero Banner
   const heroBtn = document.getElementById("heroAuthBtn");
   if (heroBtn) {
     if (currentUser) {
@@ -259,11 +333,6 @@ export function renderHeaderAuthUI() {
   }
 
   if (window.lucide) window.lucide.createIcons();
-}
-
-export function toggleUserDropdown() {
-  const menu = document.getElementById("userDropdownMenu");
-  if (menu) menu.classList.toggle("hidden");
 }
 
 // ============================================================================
@@ -433,10 +502,16 @@ export function openAdminPanelModal() {
 
         <!-- Footer Admin Panel -->
         <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs">
-          <span class="text-slate-500">Đăng nhập với tư cách: <strong>${currentUser.fullName}</strong></span>
-          <button onclick="window.closeAdminPanelModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-1.5 rounded-xl font-bold transition-colors">
-            Đóng
-          </button>
+          <span class="text-slate-500">Đăng nhập với tư cách: <strong>${currentUser.fullName}</strong> (${currentUser.roleLabel})</span>
+          <div class="flex items-center gap-2">
+            <button onclick="window.handleLogout()" class="bg-rose-600 hover:bg-rose-700 text-white px-3.5 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer">
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+              <span>ĐĂNG XUẤT</span>
+            </button>
+            <button onclick="window.closeAdminPanelModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-1.5 rounded-xl font-bold transition-colors cursor-pointer">
+              Đóng
+            </button>
+          </div>
         </div>
 
       </div>
@@ -566,12 +641,20 @@ function renderAdminDrugTable() {
 let currentFormAttachments = [];
 
 export function openAddDrugModal() {
+  if (!currentUser || currentUser.role !== "admin") {
+    alert("Quyền truy cập bị từ chối: Chỉ Quản trị viên (Admin) mới có quyền thêm chuyên luận thuốc vào cơ sở dữ liệu!");
+    return;
+  }
   currentFormAttachments = [];
   renderDrugFormModal(null);
   renderFormAttachmentsList();
 }
 
 export function openEditDrugModal(drugId) {
+  if (!currentUser || currentUser.role !== "admin") {
+    alert("Quyền truy cập bị từ chối: Chỉ Quản trị viên (Admin) mới có quyền chỉnh sửa cơ sở dữ liệu thuốc!");
+    return;
+  }
   const allDrugs = getActiveDrugsDatabase();
   const drug = allDrugs.find(d => d.id === drugId);
   if (!drug) {
@@ -1066,6 +1149,10 @@ export function renderFormAttachmentsList() {
 // Cho phép thêm, xem và gỡ bỏ file PDF của bất kỳ thuốc nào ngay lập tức
 // ============================================================================
 export function openQuickPdfModal(drugId) {
+  if (!currentUser || currentUser.role !== "admin") {
+    alert("Quyền truy cập bị từ chối: Chỉ Quản trị viên (Admin) mới có quyền quản lý tài liệu PDF!");
+    return;
+  }
   const allDrugs = getActiveDrugsDatabase();
   const drug = allDrugs.find(d => d.id === drugId);
   if (!drug) {
@@ -1335,6 +1422,10 @@ export function closeQuickPdfModal() {
 
 export async function handleSaveDrugForm(event) {
   if (event) event.preventDefault();
+  if (!currentUser || currentUser.role !== "admin") {
+    alert("Quyền truy cập bị từ chối: Chỉ Quản trị viên (Admin) mới có quyền lưu chỉnh sửa cơ sở dữ liệu!");
+    return;
+  }
 
   const idInput = document.getElementById("formDrugId");
   const nameInput = document.getElementById("formDrugName");
@@ -1459,6 +1550,10 @@ export async function handleSaveDrugForm(event) {
 }
 
 export function handleDeleteDrug(drugId) {
+  if (!currentUser || currentUser.role !== "admin") {
+    alert("Quyền truy cập bị từ chối: Chỉ Quản trị viên (Admin) mới có quyền xóa thuốc khỏi cơ sở dữ liệu!");
+    return;
+  }
   const allDrugs = getActiveDrugsDatabase();
   const target = allDrugs.find(d => d.id === drugId);
   const name = target ? target.name : drugId;
@@ -1481,6 +1576,10 @@ export function handleDeleteDrug(drugId) {
 }
 
 export function handleResetDrugs() {
+  if (!currentUser || currentUser.role !== "admin") {
+    alert("Quyền truy cập bị từ chối: Chỉ Quản trị viên (Admin) mới có quyền đặt lại cơ sở dữ liệu gốc!");
+    return;
+  }
   if (confirm("CẢNH BÁO: Thao tác này sẽ xóa tất cả các thay đổi tùy biến và khôi phục lại toàn bộ danh mục thuốc gốc ban đầu của Dược thư 2022. Tiếp tục?")) {
     resetCustomDrugsDatabase();
     showToast("Đã khôi phục danh mục thuốc gốc ban đầu!", "success");
@@ -1491,7 +1590,79 @@ export function handleResetDrugs() {
 
 export function openUserProfileModal() {
   if (!currentUser) return;
-  alert(`THÔNG TIN CÁN BỘ Y TẾ:\n- Họ và tên: ${currentUser.fullName}\n- Email: ${currentUser.email}\n- Chức danh: ${currentUser.title}\n- Đơn vị: ${currentUser.department}\n- Quyền hệ thống: ${currentUser.roleLabel}`);
+  let container = document.getElementById("userProfileModalContainer");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "userProfileModalContainer";
+    document.body.appendChild(container);
+  }
+
+  const isAdmin = currentUser.role === "admin";
+
+  container.innerHTML = `
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in" id="userProfileModalBackdrop">
+      <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden text-slate-800">
+        <!-- Modal Header -->
+        <div class="px-6 py-5 ${isAdmin ? 'bg-gradient-to-r from-rose-700 to-rose-900' : 'bg-gradient-to-r from-teal-700 to-teal-900'} text-white relative">
+          <button onclick="window.closeUserProfileModal()" class="absolute top-4 right-4 text-white/80 hover:text-white p-1.5 rounded-xl hover:bg-white/10 transition-colors cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur border border-white/30 text-white font-black text-2xl flex items-center justify-center shadow-inner">
+              ${currentUser.avatar}
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-black">${currentUser.fullName}</h3>
+              <p class="text-xs text-white/80">${currentUser.title || currentUser.roleLabel}</p>
+              <span class="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/25 text-white border border-white/30">
+                ${currentUser.roleLabel}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-6 space-y-3 text-xs">
+          <div class="flex items-center justify-between py-2 border-b border-slate-100">
+            <span class="text-slate-500">Email tài khoản:</span>
+            <span class="font-bold text-slate-800 font-mono">${currentUser.email}</span>
+          </div>
+          <div class="flex items-center justify-between py-2 border-b border-slate-100">
+            <span class="text-slate-500">Khoa / Phòng:</span>
+            <span class="font-bold text-slate-800">${currentUser.department}</span>
+          </div>
+          <div class="flex items-center justify-between py-2 border-b border-slate-100">
+            <span class="text-slate-500">Chức danh:</span>
+            <span class="font-bold text-slate-800">${currentUser.title || "Cán bộ y tế"}</span>
+          </div>
+          <div class="flex items-center justify-between py-2 border-b border-slate-100">
+            <span class="text-slate-500">Trạng thái:</span>
+            <span class="inline-flex items-center gap-1.5 text-emerald-700 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Đang hoạt động
+            </span>
+          </div>
+        </div>
+
+        <!-- Modal Footer with prominent Logout Button -->
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3">
+          <button onclick="window.handleLogout()" class="py-2.5 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs flex items-center gap-2 shadow-sm transition-colors cursor-pointer">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+            <span>ĐĂNG XUẤT NGAY</span>
+          </button>
+          <button onclick="window.closeUserProfileModal()" class="py-2.5 px-5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-xs transition-colors cursor-pointer">
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  if (window.lucide) window.lucide.createIcons();
+}
+
+export function closeUserProfileModal() {
+  const container = document.getElementById("userProfileModalContainer");
+  if (container) container.innerHTML = "";
 }
 
 export function showRegisterTab() {
@@ -1552,10 +1723,13 @@ function setupGlobalWindowBindings() {
   window.handleManualLogin = handleManualLogin;
   window._moduleHandleManualLogin = handleManualLogin;
   window.handleLogout = handleLogout;
+  window._moduleHandleLogout = handleLogout;
   window.toggleUserDropdown = toggleUserDropdown;
+  window.closeUserDropdown = closeUserDropdown;
   window.openAdminPanelModal = openAdminPanelModal;
   window.closeAdminPanelModal = closeAdminPanelModal;
   window.openUserProfileModal = openUserProfileModal;
+  window.closeUserProfileModal = closeUserProfileModal;
   window.showRegisterTab = showRegisterTab;
   window.renderHeaderAuthUI = renderHeaderAuthUI;
 
@@ -1584,4 +1758,12 @@ function setupGlobalWindowBindings() {
     renderFormAttachmentsList();
   };
   window.getCurrentFormAttachments = () => currentFormAttachments;
+
+  // Đóng dropdown tài khoản khi click ra ngoài
+  document.addEventListener("click", (e) => {
+    const wrapper = document.getElementById("userDropdownWrapper");
+    if (wrapper && !wrapper.contains(e.target)) {
+      closeUserDropdown();
+    }
+  });
 }

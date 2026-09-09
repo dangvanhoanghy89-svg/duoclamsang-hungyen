@@ -127,7 +127,7 @@
 
     <!-- Mobile Menu Drawer -->
     <div id="mobileMenuDrawer" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 py-3 space-y-1 text-sm font-semibold text-slate-600">
-      <div class="pb-2 mb-2 border-b border-slate-100">
+      <div id="authMobileDrawerContainer" class="pb-2 mb-2 border-b border-slate-100">
         <button onclick="window.openLoginModal()" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-xs">
           <i data-lucide="log-in" class="w-4 h-4"></i>
           <span>ĐĂNG NHẬP (ADMIN / BÁC SĨ)</span>
@@ -1491,6 +1491,23 @@
       }
     };
 
+    window.handleLogout = function() {
+      if (window._moduleHandleLogout) {
+        window._moduleHandleLogout();
+        return;
+      }
+      localStorage.removeItem("CLINICALRX_AUTH_USER");
+      localStorage.removeItem("clinicalrx_auth_user_v2");
+      if (window.renderHeaderAuthUI) {
+        window.renderHeaderAuthUI();
+      }
+      var adminModal = document.getElementById("adminPanelModalContainer");
+      if (adminModal) adminModal.innerHTML = "";
+      var profModal = document.getElementById("userProfileModalContainer");
+      if (profModal) profModal.innerHTML = "";
+      alert("Đã đăng xuất thành công!");
+    };
+
     window.forceAppReload = function() {
       try {
         if ('caches' in window) {
@@ -1504,7 +1521,7 @@
   </script>
 
   <!-- Master Application Script (ES Module) -->
-  <script type="module" src="./js/app.js?v=20260909_v6_big_logo"></script>
+  <script type="module" src="./js/app.js?v=20260909_v8_permission_fix"></script>
 
 </body>
 </html>
