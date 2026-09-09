@@ -105,8 +105,7 @@ export function closeLoginModal() {
 }
 
 export function fastLogin(roleType) {
-  const target = DEFAULT_ACCOUNTS.find(acc => acc.role === roleType) || DEFAULT_ACCOUNTS[0];
-  executeLogin(target);
+  console.warn("Chức năng đăng nhập nhanh 1 chạm đã bị vô hiệu hóa vì lý do an toàn bảo mật.");
 }
 
 export function handleManualLogin(e) {
@@ -124,7 +123,7 @@ export function handleManualLogin(e) {
     if (errorBox) errorBox.classList.add("hidden");
     executeLogin(matched);
   } else {
-    const msg = "Email hoặc mật khẩu không chính xác! (Gợi ý: admin@bvdk-hungyen.vn / admin123)";
+    const msg = "Email hoặc mật khẩu không chính xác! Vui lòng kiểm tra lại.";
     if (errorText) errorText.textContent = msg;
     if (errorBox) {
       errorBox.textContent = msg;
