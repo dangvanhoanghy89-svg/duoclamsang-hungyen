@@ -148,6 +148,14 @@ function executeLogin(userObj) {
     try { window.renderDrugList(); } catch (err) { console.warn(err); }
   }
 
+  // Cập nhật phân quyền Cổng Hội Chẩn DIC
+  if (window.updateConsultationAuthUI) {
+    try { window.updateConsultationAuthUI(); } catch (err) { console.warn(err); }
+  }
+  if (window.renderConsultationsList) {
+    try { window.renderConsultationsList(); } catch (err) { console.warn(err); }
+  }
+
   // Nếu là Quản trị viên, tự động mở ngay Trung tâm Quản trị Admin Panel
   if (currentUser.role === "admin") {
     setTimeout(() => {
@@ -173,6 +181,12 @@ export function handleLogout() {
   renderHeaderAuthUI();
   if (window.renderDrugList) {
     try { window.renderDrugList(); } catch (err) { console.warn(err); }
+  }
+  if (window.updateConsultationAuthUI) {
+    try { window.updateConsultationAuthUI(); } catch (err) { console.warn(err); }
+  }
+  if (window.renderConsultationsList) {
+    try { window.renderConsultationsList(); } catch (err) { console.warn(err); }
   }
   showToast("Đã đăng xuất thành công khỏi hệ thống.", "success");
 }
@@ -1733,6 +1747,12 @@ function setupGlobalWindowBindings() {
   window.renderHeaderAuthUI = renderHeaderAuthUI;
 
   window.getCurrentUser = getCurrentUser;
+  window.executeLogin = executeLogin;
+  window.loginWithRole = (roleOrEmail) => {
+    const acc = DEFAULT_ACCOUNTS.find(a => a.role === roleOrEmail || a.email.toLowerCase() === (roleOrEmail || "").toLowerCase());
+    if (acc) executeLogin(acc);
+    return acc;
+  };
   window.openAdminDrugForm = openAddDrugModal;
 
   // Admin drug management bindings

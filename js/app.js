@@ -2,13 +2,13 @@
  * PHARMAVITA / CLINICALRX - CORE APPLICATION ENTRY POINT
  */
 
-import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260909_v6_big_logo";
-import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260909_v6_big_logo";
-import { initCalculators } from "./modules/calculators.js?v=20260909_v6_big_logo";
-import { initConsultationModule } from "./modules/consultation.js?v=20260909_v6_big_logo";
-import { initAdrModule } from "./modules/adrReporting.js?v=20260909_v6_big_logo";
-import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260909_v6_big_logo";
-import { initAuthModule } from "./modules/auth.js?v=20260909_v6_big_logo";
+import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260909_v11_doctor_consultation";
+import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260909_v11_doctor_consultation";
+import { initCalculators } from "./modules/calculators.js?v=20260909_v11_doctor_consultation";
+import { initConsultationModule } from "./modules/consultation.js?v=20260909_v11_doctor_consultation";
+import { initAdrModule } from "./modules/adrReporting.js?v=20260909_v11_doctor_consultation";
+import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260909_v11_doctor_consultation";
+import { initAuthModule } from "./modules/auth.js?v=20260909_v11_doctor_consultation";
 
 function initApp() {
   console.log("Khởi động ClinicalRx - Nền tảng Thông tin Thuốc & Dược Lâm Sàng");
@@ -64,6 +64,12 @@ function setupNavigation() {
 
     // Cuộn lên đầu trang nhẹ nhàng
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Refresh consultation auth UI khi vào section consultation
+    if (targetId === "consultation") {
+      if (window.updateConsultationAuthUI) window.updateConsultationAuthUI();
+      if (window.renderConsultationsList) window.renderConsultationsList();
+    }
 
     // Refresh icons
     if (window.lucide) window.lucide.createIcons();

@@ -655,7 +655,7 @@ export function openDrugModal(drugId) {
                   <p class="text-[11px] text-teal-800">Tổ Dược Lâm Sàng - Thông Tin Thuốc BVĐK Tỉnh Hưng Yên</p>
                 </div>
               </div>
-              <button onclick="window.closeDrugModal(); window.location.hash = '#consultation';" 
+              <button onclick="window.startConsultationForDrug ? window.startConsultationForDrug('${escapeHtml(drug.name)}') : (window.closeDrugModal(), window.location.hash = '#consultation');" 
                 class="inline-flex items-center gap-1.5 text-xs font-bold text-teal-700 hover:text-teal-800 bg-white hover:bg-teal-50 border border-teal-300 px-3 py-1.5 rounded-xl transition-all shadow-2xs cursor-pointer shrink-0">
                 <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
                 <span>Gửi câu hỏi hội chẩn</span>

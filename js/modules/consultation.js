@@ -70,9 +70,27 @@ const INITIAL_SAMPLE_CONSULTATIONS = [
   }
 ];
 
+export function getCurrentAppUser() {
+  if (window.getCurrentUser) {
+    const u = window.getCurrentUser();
+    if (u) return u;
+  }
+  try {
+    const raw = localStorage.getItem(CONFIG.STORAGE_KEYS.AUTH_USER) || localStorage.getItem("clinicalrx_auth_user_v2");
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return null;
+}
+
+export function isClinicalDoctor() {
+  const user = getCurrentAppUser();
+  return user && user.role === "doctor";
+}
+
 export function initConsultationModule() {
   initSupabaseClient();
   setupEventListeners();
+  updateConsultationAuthUI();
   renderConsultationsList();
 }
 
@@ -93,11 +111,11 @@ async function checkAuthState() {
   try {
     const { data } = await supabaseClient.auth.getSession();
     currentAuthUser = data.session?.user || null;
-    updateAuthUI();
+    updateConsultationAuthUI();
 
     supabaseClient.auth.onAuthStateChange((_event, session) => {
       currentAuthUser = session?.user || null;
-      updateAuthUI();
+      updateConsultationAuthUI();
       renderConsultationsList();
     });
   } catch (err) {
@@ -105,33 +123,184 @@ async function checkAuthState() {
   }
 }
 
-function updateAuthUI() {
+export function updateConsultationAuthUI() {
+  const user = getCurrentAppUser();
   const userStatusBadge = document.getElementById("consultationUserStatus");
   const authToggleBtn = document.getElementById("consultationAuthBtn");
+  const noticeContainer = document.getElementById("consultationDoctorNotice");
+  const form = document.getElementById("newConsultationForm");
+  const submitBtn = document.getElementById("consultationSubmitBtn");
 
+  // 1. Top status badge & action button
   if (userStatusBadge) {
-    if (currentAuthUser) {
-      const role = currentAuthUser.user_metadata?.role || "Bác sĩ";
-      const name = currentAuthUser.user_metadata?.full_name || currentAuthUser.email;
-      userStatusBadge.innerHTML = `
-        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-teal-100 text-teal-800 border border-teal-200">
-          <i data-lucide="user-check" class="w-3.5 h-3.5 text-teal-600"></i>
-          <span>${name} (${role})</span>
-        </span>
-      `;
+    if (user) {
+      if (user.role === "doctor") {
+        userStatusBadge.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-teal-100 text-teal-800 border border-teal-300 shadow-2xs">
+            <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-600"></i>
+            <span>${user.fullName} (${user.roleLabel})</span>
+            <span class="ml-1 px-1.5 py-0.5 rounded bg-teal-600 text-white text-[10px] font-bold">Đủ quyền gửi ca</span>
+          </span>
+        `;
+      } else if (user.role === "admin") {
+        userStatusBadge.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-300 shadow-2xs">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-rose-600"></i>
+            <span>${user.fullName} (${user.roleLabel})</span>
+            <span class="ml-1 px-1.5 py-0.5 rounded bg-slate-600 text-white text-[10px] font-bold">Tiếp nhận & Phản hồi</span>
+          </span>
+        `;
+      } else {
+        userStatusBadge.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 border border-indigo-300 shadow-2xs">
+            <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-indigo-600"></i>
+            <span>${user.fullName} (${user.roleLabel})</span>
+            <span class="ml-1 px-1.5 py-0.5 rounded bg-indigo-600 text-white text-[10px] font-bold">Tiếp nhận & Phản hồi</span>
+          </span>
+        `;
+      }
     } else {
       userStatusBadge.innerHTML = `
-        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
-          <i data-lucide="shield" class="w-3.5 h-3.5"></i>
-          <span>Chế độ: Demo / Phòng khám</span>
+        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
+          <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-500"></i>
+          <span>Chưa đăng nhập (Khách vãng lai)</span>
         </span>
       `;
     }
   }
 
   if (authToggleBtn) {
-    authToggleBtn.textContent = currentAuthUser ? "Đăng xuất" : "Đăng nhập Supabase";
-    authToggleBtn.onclick = currentAuthUser ? handleSignOut : openSupabaseAuthModal;
+    if (user) {
+      if (user.role === "doctor") {
+        authToggleBtn.innerHTML = `<i data-lucide="user-check" class="w-3.5 h-3.5 inline mr-1"></i> Bác sĩ đang trực`;
+        authToggleBtn.className = "px-3.5 py-1.5 rounded-xl border border-teal-300 bg-teal-50 text-teal-800 text-xs font-bold transition-colors cursor-default";
+        authToggleBtn.onclick = null;
+      } else {
+        authToggleBtn.innerHTML = `<i data-lucide="arrow-left-right" class="w-3.5 h-3.5 inline mr-1"></i> Đổi sang Bác sĩ`;
+        authToggleBtn.className = "px-3.5 py-1.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-bold transition-colors cursor-pointer";
+        authToggleBtn.onclick = () => {
+          if (window.openLoginModal) window.openLoginModal();
+        };
+      }
+    } else {
+      authToggleBtn.innerHTML = `<i data-lucide="log-in" class="w-3.5 h-3.5 inline mr-1"></i> Đăng nhập Bác sĩ`;
+      authToggleBtn.className = "px-3.5 py-1.5 rounded-xl border border-teal-600 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold transition-colors shadow-xs cursor-pointer";
+      authToggleBtn.onclick = () => {
+        if (window.openLoginModal) window.openLoginModal();
+      };
+    }
+  }
+
+  // 2. Doctor notice & Form state
+  const isDoc = isClinicalDoctor();
+
+  if (noticeContainer) {
+    if (isDoc) {
+      noticeContainer.innerHTML = `
+        <div class="p-3 bg-teal-50 border border-teal-200 rounded-xl flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-teal-600 text-white font-bold flex items-center justify-center text-sm shadow-xs shrink-0">
+              ${user.avatar || "B"}
+            </div>
+            <div>
+              <div class="font-bold text-teal-950 text-xs">${user.fullName}</div>
+              <div class="text-[10px] text-teal-700 font-medium">${user.title || "Bác sĩ điều trị"} · ${user.department}</div>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-100 text-teal-800 border border-teal-300 shrink-0">
+            Đủ quyền gửi ca
+          </span>
+        </div>
+      `;
+    } else if (!user) {
+      noticeContainer.innerHTML = `
+        <div class="p-4 bg-amber-50 border border-amber-300/80 rounded-xl space-y-2.5 text-center shadow-xs">
+          <div class="w-9 h-9 mx-auto rounded-full bg-amber-100 text-amber-700 flex items-center justify-center">
+            <i data-lucide="lock" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h4 class="font-black text-amber-950 text-xs sm:text-sm">Chỉ Bác Sĩ Lâm Sàng Mới Được Gửi Hội Chẩn</h4>
+            <p class="text-[11px] text-amber-800 mt-1 leading-relaxed">
+              Theo quy định phân quyền chuyên môn y tế, tính năng gửi yêu cầu hội chẩn ca bệnh (DIC) chỉ dành riêng cho <strong>Bác sĩ lâm sàng</strong>.
+            </p>
+          </div>
+          <button type="button" onclick="window.openLoginModal()" 
+            class="inline-flex items-center gap-1.5 px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer">
+            <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
+            <span>Đăng nhập tài khoản Bác sĩ</span>
+          </button>
+        </div>
+      `;
+    } else {
+      noticeContainer.innerHTML = `
+        <div class="p-3.5 bg-rose-50 border border-rose-300/80 rounded-xl space-y-2 shadow-xs">
+          <div class="flex items-start gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center font-bold shrink-0">
+              <i data-lucide="shield-alert" class="w-4 h-4"></i>
+            </div>
+            <div class="text-xs">
+              <div class="font-bold text-rose-950">Không đủ thẩm quyền gửi câu hỏi</div>
+              <p class="text-[11px] text-rose-800 mt-0.5 leading-relaxed">
+                Tài khoản hiện tại: <strong>${user.fullName}</strong> (${user.roleLabel}).<br>
+                Theo quy trình chuyên môn, chỉ tài khoản <strong>Bác sĩ lâm sàng</strong> mới có quyền gửi yêu cầu hội chẩn ca bệnh. Dược sĩ / Quản trị viên phụ trách tiếp nhận và trả lời hội chẩn ở danh sách bên phải.
+              </p>
+            </div>
+          </div>
+          <div class="pt-2 border-t border-rose-200 flex items-center justify-between text-[11px]">
+            <span class="text-slate-500">Cần gửi ca bệnh điều trị?</span>
+            <button type="button" onclick="window.handleLogout(); setTimeout(() => window.openLoginModal(), 150);" class="text-rose-700 font-bold hover:underline cursor-pointer">
+              Đổi sang tài khoản Bác sĩ
+            </button>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  // 3. Enable or disable form inputs
+  if (form) {
+    const inputs = form.querySelectorAll("input, select, textarea");
+    inputs.forEach(el => {
+      el.disabled = !isDoc;
+      if (!isDoc) {
+        el.classList.add("bg-slate-100", "cursor-not-allowed", "opacity-60");
+      } else {
+        el.classList.remove("bg-slate-100", "cursor-not-allowed", "opacity-60");
+      }
+    });
+  }
+
+  // 4. Update submit button
+  if (submitBtn) {
+    submitBtn.disabled = !isDoc;
+    if (isDoc) {
+      submitBtn.className = "w-full py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs transition-colors shadow-sm flex items-center justify-center gap-1.5 cursor-pointer";
+      submitBtn.innerHTML = `
+        <i data-lucide="send" class="w-4 h-4"></i>
+        <span>Gửi Yêu Cầu Hội Chẩn</span>
+      `;
+      submitBtn.onclick = null;
+    } else if (!user) {
+      submitBtn.className = "w-full py-2.5 rounded-xl bg-slate-200 text-slate-500 hover:bg-amber-100 hover:text-amber-900 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer";
+      submitBtn.innerHTML = `
+        <i data-lucide="lock" class="w-4 h-4 text-amber-600"></i>
+        <span>Đăng nhập Bác sĩ để gửi câu hỏi</span>
+      `;
+      submitBtn.onclick = (e) => {
+        e.preventDefault();
+        if (window.openLoginModal) window.openLoginModal();
+      };
+    } else {
+      submitBtn.className = "w-full py-2.5 rounded-xl bg-slate-200 text-slate-400 font-bold text-xs flex items-center justify-center gap-1.5 cursor-not-allowed";
+      submitBtn.innerHTML = `
+        <i data-lucide="slash" class="w-4 h-4"></i>
+        <span>Chỉ Bác sĩ lâm sàng mới có quyền gửi</span>
+      `;
+      submitBtn.onclick = (e) => {
+        e.preventDefault();
+        alert(`Tài khoản hiện tại (${user.roleLabel}) không có quyền gửi câu hỏi hội chẩn. Chức năng chỉ dành cho Bác sĩ lâm sàng.`);
+      };
+    }
   }
 
   if (window.lucide) window.lucide.createIcons();
@@ -221,6 +390,9 @@ export async function renderConsultationsList() {
     return;
   }
 
+  const user = getCurrentAppUser();
+  const canReply = user && (user.role === "pharmacist" || user.role === "admin");
+
   container.innerHTML = filtered.map(item => {
     const isAnswered = item.status === "answered";
     const statusBadge = isAnswered 
@@ -290,13 +462,19 @@ export async function renderConsultationsList() {
           <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
             <span class="text-amber-700 italic flex items-center gap-1">
               <i data-lucide="hourglass" class="w-3.5 h-3.5"></i>
-              Dược sĩ lâm sàng đang tra cứu tài liệu y văn...
+              ${canReply ? "Đang chờ Dược sĩ phản hồi ý kiến chuyên môn..." : "Đang chờ Tổ Dược lâm sàng tiếp nhận & phản hồi..."}
             </span>
-            <button onclick="window.openPharmacistReplyModal('${item.id}')" 
-              class="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-semibold flex items-center gap-1 transition-colors">
-              <i data-lucide="message-square-plus" class="w-3.5 h-3.5"></i>
-              <span>Dược sĩ phản hồi</span>
-            </button>
+            ${canReply ? `
+              <button onclick="window.openPharmacistReplyModal('${item.id}')" 
+                class="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-semibold flex items-center gap-1 transition-colors cursor-pointer shadow-xs">
+                <i data-lucide="message-square-plus" class="w-3.5 h-3.5"></i>
+                <span>Dược sĩ phản hồi</span>
+              </button>
+            ` : `
+              <span class="text-[11px] text-slate-400 font-medium italic">
+                (Chỉ Dược sĩ được gửi phản hồi)
+              </span>
+            `}
           </div>
         `}
       </div>
@@ -309,6 +487,13 @@ export async function renderConsultationsList() {
 async function handleNewConsultationSubmit(e) {
   e.preventDefault();
   const form = e.target;
+  const user = getCurrentAppUser();
+
+  if (!user || user.role !== "doctor") {
+    alert("Từ chối thao tác: Chỉ tài khoản của Bác sĩ lâm sàng mới có quyền gửi câu hỏi hội chẩn!\n\nVui lòng đăng nhập với tài khoản Bác sĩ lâm sàng (bacsi@bvdk-hungyen.vn).");
+    if (!user && window.openLoginModal) window.openLoginModal();
+    return;
+  }
 
   const title = form.elements["qTitle"].value.trim();
   const category = form.elements["qCategory"].value;
@@ -342,7 +527,7 @@ async function handleNewConsultationSubmit(e) {
     references_text: null,
     status: "pending",
     created_at: new Date().toISOString(),
-    doctor_name: currentAuthUser ? (currentAuthUser.user_metadata?.full_name || currentAuthUser.email) : "Bác sĩ lâm sàng"
+    doctor_name: `${user.fullName} (${user.department ? user.department.split("·")[0].trim() : "Khoa Lâm Sàng"})`
   };
 
   // Lưu Supabase nếu có user đăng nhập
@@ -376,12 +561,24 @@ async function handleNewConsultationSubmit(e) {
   saveStoredConsultations(currentList);
 
   form.reset();
-  alert("Gửi yêu cầu tư vấn thành công! Dược sĩ lâm sàng sẽ tiếp nhận và xử lý.");
+  alert("Gửi yêu cầu hội chẩn thành công! Ca bệnh đã được chuyển tới Tổ Dược lâm sàng để tiếp nhận và xử lý.");
   renderConsultationsList();
 }
 
 // Modal để Dược sĩ nhập ý kiến tư vấn
 export function openPharmacistReplyModal(itemId) {
+  const user = getCurrentAppUser();
+  if (!user) {
+    alert("Chức năng phản hồi hội chẩn chỉ dành cho Dược sĩ lâm sàng hoặc Quản trị viên. Vui lòng đăng nhập.");
+    if (window.openLoginModal) window.openLoginModal();
+    return;
+  }
+
+  if (user.role !== "pharmacist" && user.role !== "admin") {
+    alert(`Tài khoản "${user.roleLabel}" (${user.fullName}) không có quyền phản hồi hội chẩn.\n\nTheo quy trình chuyên môn, chức năng này dành cho Dược sĩ lâm sàng (Tổ Dược lâm sàng).`);
+    return;
+  }
+
   const currentList = getStoredConsultations();
   const item = currentList.find(i => String(i.id) === String(itemId));
   if (!item) return;
@@ -398,7 +595,7 @@ export function openPharmacistReplyModal(itemId) {
             <i data-lucide="stethoscope" class="w-5 h-5 text-teal-300"></i>
             <h3 class="text-lg font-bold">Soạn Thảo Phản Hồi Dược Lâm Sàng</h3>
           </div>
-          <button onclick="window.closePharmacistReplyModal()" class="text-white/80 hover:text-white">
+          <button onclick="window.closePharmacistReplyModal()" class="text-white/80 hover:text-white cursor-pointer">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -412,7 +609,7 @@ export function openPharmacistReplyModal(itemId) {
           <div class="flex items-center justify-between">
             <label class="font-bold text-slate-900">Nội dung tư vấn Dược lâm sàng (EBM):</label>
             <button onclick="window.generateAiClinicalSuggestion('${item.id}')" 
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-gradient-to-r from-teal-600 to-indigo-600 text-white shadow-xs hover:opacity-90 transition-opacity">
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-gradient-to-r from-teal-600 to-indigo-600 text-white shadow-xs hover:opacity-90 transition-opacity cursor-pointer">
               <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
               <span>AI Trợ lý Gợi ý Phác Thảo</span>
             </button>
@@ -429,10 +626,10 @@ export function openPharmacistReplyModal(itemId) {
         </div>
 
         <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-3">
-          <button onclick="window.closePharmacistReplyModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:text-slate-800">
+          <button onclick="window.closePharmacistReplyModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:text-slate-800 cursor-pointer">
             Hủy bỏ
           </button>
-          <button onclick="window.submitPharmacistReply('${item.id}')" class="px-5 py-2 text-xs font-bold bg-teal-700 hover:bg-teal-800 text-white rounded-xl shadow-sm transition-colors">
+          <button onclick="window.submitPharmacistReply('${item.id}')" class="px-5 py-2 text-xs font-bold bg-teal-700 hover:bg-teal-800 text-white rounded-xl shadow-sm transition-colors cursor-pointer">
             Xác nhận & Gửi phản hồi
           </button>
         </div>
@@ -478,6 +675,12 @@ export function generateAiClinicalSuggestion(itemId) {
 }
 
 export function submitPharmacistReply(itemId) {
+  const user = getCurrentAppUser();
+  if (!user || (user.role !== "pharmacist" && user.role !== "admin")) {
+    alert("Chỉ Dược sĩ lâm sàng hoặc Quản trị viên mới có quyền gửi phản hồi tư vấn!");
+    return;
+  }
+
   const textarea = document.getElementById("replyTextarea");
   const refInput = document.getElementById("replyReferences");
   if (!textarea) return;
@@ -497,9 +700,7 @@ export function submitPharmacistReply(itemId) {
     currentList[index].references_text = refs;
     currentList[index].status = "answered";
     currentList[index].answered_at = new Date().toISOString();
-    currentList[index].pharmacist_name = currentAuthUser 
-      ? (currentAuthUser.user_metadata?.full_name || "Dược sĩ lâm sàng")
-      : "DSLS. Phụ trách";
+    currentList[index].pharmacist_name = `${user.fullName} (${user.title || user.roleLabel})`;
 
     saveStoredConsultations(currentList);
   }
@@ -626,8 +827,32 @@ async function handleSignOut() {
     await supabaseClient.auth.signOut();
   }
   currentAuthUser = null;
-  updateAuthUI();
+  updateConsultationAuthUI();
   renderConsultationsList();
+}
+
+export function startConsultationForDrug(drugName) {
+  if (window.closeDrugModal) window.closeDrugModal();
+  if (window.navigateToSection) {
+    window.navigateToSection("consultation");
+  } else {
+    window.location.hash = "#consultation";
+  }
+
+  setTimeout(() => {
+    updateConsultationAuthUI();
+    const user = getCurrentAppUser();
+    if (user && user.role === "doctor") {
+      const form = document.getElementById("newConsultationForm");
+      if (form) {
+        if (form.elements["qTitle"]) form.elements["qTitle"].value = `Hội chẩn chỉ định & liều dùng ${drugName || ""}`;
+        if (form.elements["qCategory"]) form.elements["qCategory"].value = "Lựa chọn phác đồ";
+        if (form.elements["qContent"] && !form.elements["qContent"].value) {
+          form.elements["qContent"].value = `Kính gửi Tổ Dược Lâm Sàng:\nXin ý kiến tư vấn chuyên môn về việc sử dụng thuốc ${drugName || ""} trên bệnh nhân...`;
+        }
+      }
+    }
+  }, 200);
 }
 
 function escapeHtml(s) {
@@ -643,3 +868,8 @@ window.openSupabaseAuthModal = openSupabaseAuthModal;
 window.closeSupabaseAuthModal = closeSupabaseAuthModal;
 window.saveSupabaseConfig = saveSupabaseConfig;
 window.handleSupabaseSignIn = handleSupabaseSignIn;
+window.updateConsultationAuthUI = updateConsultationAuthUI;
+window.renderConsultationsList = renderConsultationsList;
+window.startConsultationForDrug = startConsultationForDrug;
+window.getCurrentAppUser = getCurrentAppUser;
+window.isClinicalDoctor = isClinicalDoctor;
