@@ -156,6 +156,11 @@ function executeLogin(userObj) {
     try { window.renderConsultationsList(); } catch (err) { console.warn(err); }
   }
 
+  // Cập nhật phân quyền Báo cáo ADR
+  if (window.updateAdrAuthUI) {
+    try { window.updateAdrAuthUI(); } catch (err) { console.warn(err); }
+  }
+
   // Nếu là Quản trị viên, tự động mở ngay Trung tâm Quản trị Admin Panel
   if (currentUser.role === "admin") {
     setTimeout(() => {
@@ -187,6 +192,9 @@ export function handleLogout() {
   }
   if (window.renderConsultationsList) {
     try { window.renderConsultationsList(); } catch (err) { console.warn(err); }
+  }
+  if (window.updateAdrAuthUI) {
+    try { window.updateAdrAuthUI(); } catch (err) { console.warn(err); }
   }
   showToast("Đã đăng xuất thành công khỏi hệ thống.", "success");
 }

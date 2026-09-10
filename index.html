@@ -1075,10 +1075,16 @@
           </p>
         </div>
 
-        <button onclick="window.printAdrReport()" class="allow-print inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors shadow-sm">
-          <i data-lucide="printer" class="w-4 h-4"></i>
-          <span>In Biên Bản ADR (A4)</span>
-        </button>
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <div id="adrUserStatus"></div>
+          <button id="adrAuthBtn" class="px-3.5 py-1.5 rounded-xl border border-purple-300 bg-purple-50 hover:bg-purple-100 text-purple-900 text-xs font-bold transition-colors">
+            Đăng nhập Bác sĩ
+          </button>
+          <button onclick="window.printAdrReport()" class="allow-print inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors shadow-sm">
+            <i data-lucide="printer" class="w-4 h-4"></i>
+            <span>In Biên Bản ADR (A4)</span>
+          </button>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -1102,8 +1108,11 @@
           </div>
           <div class="text-center pt-2">
             <h3 class="text-base sm:text-lg font-black text-slate-900 uppercase">BÁO CÁO PHẢN ỨNG CÓ HẠI CỦA THUỐC (ADR)</h3>
-            <p class="text-[11px] text-slate-500 italic">(Dành cho Bác sĩ, Dược sĩ, Điều dưỡng)</p>
+            <p class="text-[11px] text-slate-500 italic">(Dành riêng cho Bác sĩ lâm sàng điều trị)</p>
           </div>
+
+          <!-- Thông báo phân quyền Bác sĩ gửi báo cáo ADR -->
+          <div id="adrDoctorNotice" class="my-2"></div>
 
           <form id="adrReportForm" class="space-y-4 text-xs">
             <!-- Thông tin người bệnh -->
@@ -1189,8 +1198,26 @@
               </div>
             </div>
 
+            <!-- Thông tin Bác sĩ lập báo cáo -->
+            <div>
+              <h4 class="font-bold text-slate-900 text-sm mb-2 flex items-center gap-1.5">
+                <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs">D</span>
+                THÔNG TIN BÁC SĨ BÁO CÁO
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div>
+                  <label class="font-semibold text-slate-700 block mb-1">Bác sĩ lập báo cáo:</label>
+                  <input id="adrReporterName" name="adrReporterName" type="text" readonly placeholder="Họ tên Bác sĩ" class="w-full p-2 border border-slate-300 rounded-lg bg-slate-50 font-medium text-slate-700">
+                </div>
+                <div>
+                  <label class="font-semibold text-slate-700 block mb-1">Khoa / Phòng điều trị:</label>
+                  <input id="adrReporterDept" name="adrReporterDept" type="text" readonly placeholder="Khoa điều trị" class="w-full p-2 border border-slate-300 rounded-lg bg-slate-50 font-medium text-slate-700">
+                </div>
+              </div>
+            </div>
+
             <div class="pt-2 no-print">
-              <button type="submit" class="w-full py-2.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs transition-colors shadow-sm flex items-center justify-center gap-2">
+              <button id="adrSubmitBtn" type="submit" class="w-full py-2.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer">
                 <i data-lucide="check-circle" class="w-4 h-4"></i>
                 <span>Lưu & Gửi Báo Cáo ADR Vào Hệ Thống</span>
               </button>
@@ -1466,7 +1493,7 @@
   </script>
 
   <!-- Master Application Script (ES Module) -->
-  <script type="module" src="./js/app.js?v=20260909_v12_header_rename"></script>
+  <script type="module" src="./js/app.js?v=20260910_v13_adr_doctor_auth"></script>
 
 </body>
 </html>
