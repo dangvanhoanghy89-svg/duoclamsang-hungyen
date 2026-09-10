@@ -51,6 +51,63 @@ code, pre, .font-mono {
   line-height: 1rem;
 }
 
+/* ==========================================================================
+   MOBILE OPTIMIZATIONS & TOUCH INTERACTIONS
+   ========================================================================== */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Touch momentum scrolling */
+.touch-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar utility for chip strips & tabs */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Prevent iOS Safari automatic zoom on inputs when font-size < 16px */
+@media (max-width: 640px) {
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Safe area padding for modern mobile notches & home indicator */
+.pb-safe {
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+}
+.pt-safe {
+  padding-top: calc(0.5rem + env(safe-area-inset-top, 0px));
+}
+
+/* Mobile active button feedback */
+.mobile-nav-btn:active {
+  transform: scale(0.92);
+}
+
+/* Smooth modal sheet transition on mobile */
+@media (max-width: 640px) {
+  .modal-sheet-mobile {
+    margin: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    max-height: 94vh !important;
+  }
+}
+
 /* Print Styling for Clinical Forms */
 @media print {
   body {
