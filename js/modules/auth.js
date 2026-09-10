@@ -373,6 +373,9 @@ export function openAdminPanelModal() {
   }
 
   const allDrugs = getActiveDrugsDatabase();
+  const adrCount = getAdrCount();
+  const consultationCount = getConsultationCount();
+  const pdfTotalCount = getPdfTotalCount();
 
   container.innerHTML = `
     <div class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
@@ -459,63 +462,203 @@ export function openAdminPanelModal() {
 
           <!-- TAB 2: TỔNG QUAN & TÀI KHOẢN -->
           <div id="adminTabContentOverview" class="hidden space-y-6">
-            <!-- Thống kê hệ thống -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                <span class="text-[11px] text-slate-400 font-bold uppercase">Tổng Chuyên Luận</span>
-                <div class="text-xl font-black text-rose-700 mt-1">${allDrugs.length} Thuốc</div>
+            <!-- Thống kê hệ thống theo các phân hệ Header -->
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div>
+                  <h4 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                    <i data-lucide="layout-grid" class="w-4 h-4 text-rose-600"></i>
+                    <span>Thống Kê Tổng Quan & Điều Hướng Nhanh Các Phân Hệ (Header Menu)</span>
+                  </h4>
+                  <p class="text-xs text-slate-500">Nhấp vào thẻ phân hệ bất kỳ để chuyển nhanh đến giao diện làm việc tương ứng</p>
+                </div>
+                <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">Dữ liệu thời gian thực</span>
               </div>
-              <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                <span class="text-[11px] text-slate-400 font-bold uppercase">Tài khoản Cán bộ</span>
-                <div class="text-xl font-black text-teal-700 mt-1">${DEFAULT_ACCOUNTS.length} Tài khoản</div>
-              </div>
-              <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                <span class="text-[11px] text-slate-400 font-bold uppercase">Hội chẩn EBM</span>
-                <div class="text-xl font-black text-blue-700 mt-1">Đang hoạt động</div>
-              </div>
-              <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                <span class="text-[11px] text-slate-400 font-bold uppercase">Dược cảnh giác ADR</span>
-                <div class="text-xl font-black text-purple-700 mt-1">Thang Naranjo 10đ</div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <!-- 1. Tra cứu thuốc -->
+                <div onclick="window.adminNavigateToModule('drugs')" 
+                  class="group bg-white p-3.5 rounded-xl border border-slate-200 hover:border-rose-400 hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer relative">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] text-slate-500 font-bold uppercase group-hover:text-rose-700 transition-colors">Tra cứu thuốc</span>
+                    <i data-lucide="search" class="w-4 h-4 text-rose-600"></i>
+                  </div>
+                  <div class="text-xl font-black text-rose-700 mt-1">${allDrugs.length} Thuốc</div>
+                  <div class="text-[10px] text-slate-400 mt-1 flex items-center justify-between">
+                    <span>Dược thư QG 2022</span>
+                    <span class="text-rose-600 font-bold group-hover:underline">Quản lý →</span>
+                  </div>
+                </div>
+
+                <!-- 2. Tương tác thuốc -->
+                <div onclick="window.adminNavigateToModule('interactions')" 
+                  class="group bg-white p-3.5 rounded-xl border border-slate-200 hover:border-amber-400 hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer relative">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] text-slate-500 font-bold uppercase group-hover:text-amber-700 transition-colors">Tương tác thuốc</span>
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600"></i>
+                  </div>
+                  <div class="text-xl font-black text-amber-700 mt-1">52 Cặp thuốc</div>
+                  <div class="text-[10px] text-slate-400 mt-1 flex items-center justify-between">
+                    <span>Nguy cơ cao & CĐ</span>
+                    <span class="text-amber-600 font-bold group-hover:underline">Mở tra cứu →</span>
+                  </div>
+                </div>
+
+                <!-- 3. Công cụ tính toán -->
+                <div onclick="window.adminNavigateToModule('calculators')" 
+                  class="group bg-white p-3.5 rounded-xl border border-slate-200 hover:border-emerald-400 hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer relative">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] text-slate-500 font-bold uppercase group-hover:text-emerald-700 transition-colors">Công cụ tính toán</span>
+                    <i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i>
+                  </div>
+                  <div class="text-xl font-black text-emerald-700 mt-1">8 Công cụ</div>
+                  <div class="text-[10px] text-slate-400 mt-1 flex items-center justify-between">
+                    <span>CrCl, eGFR, BMI...</span>
+                    <span class="text-emerald-600 font-bold group-hover:underline">Mở máy tính →</span>
+                  </div>
+                </div>
+
+                <!-- 4. Tương hợp - Tương kỵ -->
+                <div onclick="window.adminNavigateToModule('iv')" 
+                  class="group bg-white p-3.5 rounded-xl border border-slate-200 hover:border-cyan-400 hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer relative">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] text-slate-500 font-bold uppercase group-hover:text-cyan-700 transition-colors">Tương hợp - Tương kỵ</span>
+                    <i data-lucide="git-merge" class="w-4 h-4 text-cyan-600"></i>
+                  </div>
+                  <div class="text-xl font-black text-cyan-700 mt-1">120+ Cặp Y-site</div>
+                  <div class="text-[10px] text-slate-400 mt-1 flex items-center justify-between">
+                    <span>Tiêm truyền ICU</span>
+                    <span class="text-cyan-600 font-bold group-hover:underline">Mở kiểm tra →</span>
+                  </div>
+                </div>
+
+                <!-- 5. Hội chẩn lâm sàng -->
+                <div onclick="window.adminNavigateToModule('consultation')" 
+                  class="group bg-white p-3.5 rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer relative">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] text-slate-500 font-bold uppercase group-hover:text-blue-700 transition-colors">Hội chẩn lâm sàng</span>
+                    <i data-lucide="messages-square" class="w-4 h-4 text-blue-600"></i>
+                  </div>
+                  <div class="text-xl font-black text-blue-700 mt-1">${consultationCount} Ca bệnh</div>
+                  <div class="text-[10px] text-slate-400 mt-1 flex items-center justify-between">
+                    <span>Hỏi đáp ca bệnh DIC</span>
+                    <span class="text-blue-600 font-bold group-hover:underline">Mở hội chẩn →</span>
+                  </div>
+                </div>
+
+                <!-- 6. Báo cáo ADR -->
+                <div onclick="window.adminNavigateToModule('adr')" 
+                  class="group bg-white p-3.5 rounded-xl border border-slate-200 hover:border-purple-400 hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer relative">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] text-slate-500 font-bold uppercase group-hover:text-purple-700 transition-colors">Báo cáo ADR</span>
+                    <i data-lucide="shield-alert" class="w-4 h-4 text-purple-600"></i>
+                  </div>
+                  <div class="text-xl font-black text-purple-700 mt-1">${adrCount} Báo cáo</div>
+                  <div class="text-[10px] text-slate-400 mt-1 flex items-center justify-between">
+                    <span>Cảnh giác dược Naranjo</span>
+                    <span class="text-purple-600 font-bold group-hover:underline">Mở báo cáo →</span>
+                  </div>
+                </div>
+
+                <!-- 7. Tài khoản Cán bộ -->
+                <div onclick="window.adminNavigateToModule('accounts')" 
+                  class="group bg-white p-3.5 rounded-xl border border-slate-200 hover:border-teal-400 hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer relative">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] text-slate-500 font-bold uppercase group-hover:text-teal-700 transition-colors">Tài khoản Cán bộ</span>
+                    <i data-lucide="users" class="w-4 h-4 text-teal-600"></i>
+                  </div>
+                  <div class="text-xl font-black text-teal-700 mt-1">${DEFAULT_ACCOUNTS.length} Tài khoản</div>
+                  <div class="text-[10px] text-slate-400 mt-1 flex items-center justify-between">
+                    <span>Admin · Bác sĩ · Dược sĩ</span>
+                    <span class="text-teal-600 font-bold group-hover:underline">Xem danh sách ↓</span>
+                  </div>
+                </div>
+
+                <!-- 8. Tài liệu PDF Phần 7 -->
+                <div onclick="window.adminNavigateToModule('pdf')" 
+                  class="group bg-white p-3.5 rounded-xl border border-slate-200 hover:border-indigo-400 hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer relative">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] text-slate-500 font-bold uppercase group-hover:text-indigo-700 transition-colors">Tài liệu PDF (Phần 7)</span>
+                    <i data-lucide="file-text" class="w-4 h-4 text-indigo-600"></i>
+                  </div>
+                  <div class="text-xl font-black text-indigo-700 mt-1">${pdfTotalCount} File PDF</div>
+                  <div class="text-[10px] text-slate-400 mt-1 flex items-center justify-between">
+                    <span>Đính kèm chuyên luận</span>
+                    <span class="text-indigo-600 font-bold group-hover:underline">Xem chi tiết →</span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- Bảng tài khoản -->
-            <div class="overflow-x-auto border border-slate-200 rounded-xl">
-              <table class="min-w-full divide-y divide-slate-200 text-left text-xs">
-                <thead class="bg-slate-50 font-bold text-slate-700">
-                  <tr>
-                    <th class="px-4 py-2.5">Họ và tên</th>
-                    <th class="px-4 py-2.5">Email nội bộ</th>
-                    <th class="px-4 py-2.5">Khoa / Phòng công tác</th>
-                    <th class="px-4 py-2.5">Cấp bậc quyền</th>
-                    <th class="px-4 py-2.5 text-right">Trạng thái</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 bg-white">
-                  ${DEFAULT_ACCOUNTS.map(acc => `
+            <!-- Bảng tài khoản cán bộ nội viện -->
+            <div id="adminAccountsTableWrapper" class="space-y-3 pt-2">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h4 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                    <i data-lucide="user-cog" class="w-4 h-4 text-teal-600"></i>
+                    <span>Danh Sách Tài Khoản Phân Quyền Nội Viện</span>
+                  </h4>
+                  <p class="text-xs text-slate-500">Nhấp vào tiêu đề cột để sắp xếp, hoặc lọc theo vai trò</p>
+                </div>
+
+                <!-- Search & Filters -->
+                <div class="flex flex-wrap items-center gap-2">
+                  <div class="relative">
+                    <i data-lucide="search" class="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input id="adminAccountSearchInput" type="text" placeholder="Tìm tài khoản..." 
+                      oninput="window.searchAdminAccounts(this.value)"
+                      class="pl-8 pr-3 py-1 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-teal-500 w-36 sm:w-44 bg-white">
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <button data-role="all" onclick="window.filterAdminAccountsByRole('all')" 
+                      class="admin-acc-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-teal-700 text-white shadow-2xs transition-all cursor-pointer">
+                      Tất cả (${DEFAULT_ACCOUNTS.length})
+                    </button>
+                    <button data-role="doctor" onclick="window.filterAdminAccountsByRole('doctor')" 
+                      class="admin-acc-filter-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all cursor-pointer">
+                      Bác sĩ
+                    </button>
+                    <button data-role="pharmacist" onclick="window.filterAdminAccountsByRole('pharmacist')" 
+                      class="admin-acc-filter-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all cursor-pointer">
+                      Dược sĩ
+                    </button>
+                    <button data-role="admin" onclick="window.filterAdminAccountsByRole('admin')" 
+                      class="admin-acc-filter-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all cursor-pointer">
+                      Admin
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bảng tài khoản với headers có thể nhấp để sắp xếp -->
+              <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                <table class="min-w-full divide-y divide-slate-200 text-left text-xs">
+                  <thead class="bg-slate-50 font-bold text-slate-700 select-none">
                     <tr>
-                      <td class="px-4 py-3 font-bold text-slate-900 flex items-center gap-2">
-                        <div class="w-6 h-6 rounded-md ${acc.role === 'admin' ? 'bg-rose-600' : 'bg-teal-600'} text-white text-[10px] font-bold flex items-center justify-center">
-                          ${acc.avatar}
-                        </div>
-                        <span>${acc.fullName}</span>
-                      </td>
-                      <td class="px-4 py-3 text-slate-600 font-mono">${acc.email}</td>
-                      <td class="px-4 py-3 text-slate-600">${acc.department}</td>
-                      <td class="px-4 py-3">
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${acc.roleBadgeClass}">
-                          ${acc.roleLabel}
-                        </span>
-                      </td>
-                      <td class="px-4 py-3 text-right">
-                        <span class="inline-flex items-center gap-1 text-emerald-700 font-bold text-[11px]">
-                          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Hoạt động
-                        </span>
-                      </td>
+                      <th data-sort="fullName" onclick="window.sortAdminAccounts('fullName')" class="admin-acc-th px-4 py-2.5 hover:bg-slate-100 cursor-pointer transition-colors" title="Nhấp để sắp xếp theo Tên">
+                        <span>Họ và tên</span>
+                        <span class="sort-icon inline-block ml-1 text-slate-300">▲</span>
+                      </th>
+                      <th data-sort="email" onclick="window.sortAdminAccounts('email')" class="admin-acc-th px-4 py-2.5 hover:bg-slate-100 cursor-pointer transition-colors" title="Nhấp để sắp xếp theo Email">
+                        <span>Email nội bộ</span>
+                        <span class="sort-icon inline-block ml-1 text-slate-300">⇅</span>
+                      </th>
+                      <th data-sort="department" onclick="window.sortAdminAccounts('department')" class="admin-acc-th px-4 py-2.5 hover:bg-slate-100 cursor-pointer transition-colors" title="Nhấp để sắp xếp theo Khoa/Phòng">
+                        <span>Khoa / Phòng công tác</span>
+                        <span class="sort-icon inline-block ml-1 text-slate-300">⇅</span>
+                      </th>
+                      <th data-sort="roleLabel" onclick="window.sortAdminAccounts('roleLabel')" class="admin-acc-th px-4 py-2.5 hover:bg-slate-100 cursor-pointer transition-colors" title="Nhấp để sắp xếp theo Cấp bậc">
+                        <span>Cấp bậc quyền</span>
+                        <span class="sort-icon inline-block ml-1 text-slate-300">⇅</span>
+                      </th>
+                      <th class="px-4 py-2.5 text-right">Trạng thái</th>
                     </tr>
-                  `).join("")}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody id="adminAccountsTableBody" class="divide-y divide-slate-100 bg-white">
+                    <!-- Rendered dynamically by renderAdminAccountsTable -->
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 
@@ -540,7 +683,193 @@ export function openAdminPanelModal() {
   `;
 
   renderAdminDrugTable();
+  renderAdminAccountsTable();
   if (window.lucide) window.lucide.createIcons();
+}
+
+// ============================================================================
+// HỖ TRỢ THỐNG KÊ & ĐIỀU HƯỚNG PHÂN HỆ HEADER TRONG ADMIN PANEL
+// ============================================================================
+export function getAdrCount() {
+  try {
+    const raw = localStorage.getItem(CONFIG.STORAGE_KEYS.OFFLINE_ADR) || localStorage.getItem("clinicalrx_offline_adr_reports");
+    if (raw) {
+      const list = JSON.parse(raw);
+      if (Array.isArray(list)) return list.length;
+    }
+  } catch (e) {}
+  return 1;
+}
+
+export function getConsultationCount() {
+  try {
+    const raw = localStorage.getItem("clinicalrx_offline_consultations");
+    if (raw) {
+      const list = JSON.parse(raw);
+      if (Array.isArray(list)) return list.length;
+    }
+  } catch (e) {}
+  return 3;
+}
+
+export function getPdfTotalCount() {
+  try {
+    const raw = localStorage.getItem("clinicalrx_pdf_storage_v1");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return Object.keys(parsed).length;
+    }
+  } catch (e) {}
+  return 0;
+}
+
+export function adminNavigateToModule(targetId) {
+  if (targetId === "drugs") {
+    switchAdminTab("drugs");
+  } else if (targetId === "accounts") {
+    const tableEl = document.getElementById("adminAccountsTableWrapper");
+    if (tableEl) {
+      tableEl.scrollIntoView({ behavior: "smooth" });
+      tableEl.classList.add("ring-2", "ring-teal-500");
+      setTimeout(() => tableEl.classList.remove("ring-2", "ring-teal-500"), 1500);
+    }
+  } else if (targetId === "pdf") {
+    switchAdminTab("drugs");
+    const searchInput = document.getElementById("adminDrugSearchInput");
+    if (searchInput) {
+      searchInput.value = "";
+      filterAdminDrugs("");
+    }
+  } else {
+    // Điều hướng trực tiếp đến phân hệ Header tương ứng
+    closeAdminPanelModal();
+    if (window.navigateToSection) {
+      window.navigateToSection(targetId);
+    }
+  }
+}
+
+// ============================================================================
+// QUẢN LÝ BẢNG TÀI KHOẢN: LỌC, TÌM KIẾM, SẮP XẾP
+// ============================================================================
+let adminAccountsFilterRole = "all";
+let adminAccountsSearchQuery = "";
+let adminAccountsSortKey = "fullName";
+let adminAccountsSortAsc = true;
+
+export function filterAdminAccountsByRole(role) {
+  adminAccountsFilterRole = role;
+  renderAdminAccountsTable();
+}
+
+export function searchAdminAccounts(query) {
+  adminAccountsSearchQuery = (query || "").trim().toLowerCase();
+  renderAdminAccountsTable();
+}
+
+export function sortAdminAccounts(key) {
+  if (adminAccountsSortKey === key) {
+    adminAccountsSortAsc = !adminAccountsSortAsc;
+  } else {
+    adminAccountsSortKey = key;
+    adminAccountsSortAsc = true;
+  }
+  renderAdminAccountsTable();
+}
+
+export function renderAdminAccountsTable() {
+  const tbody = document.getElementById("adminAccountsTableBody");
+  if (!tbody) return;
+
+  let list = [...DEFAULT_ACCOUNTS];
+
+  // Filter by role
+  if (adminAccountsFilterRole && adminAccountsFilterRole !== "all") {
+    list = list.filter(acc => acc.role === adminAccountsFilterRole);
+  }
+
+  // Filter by search query
+  if (adminAccountsSearchQuery) {
+    list = list.filter(acc => {
+      const target = `${acc.fullName} ${acc.email} ${acc.department} ${acc.roleLabel}`.toLowerCase();
+      return target.includes(adminAccountsSearchQuery);
+    });
+  }
+
+  // Sort
+  list.sort((a, b) => {
+    let valA = a[adminAccountsSortKey] || "";
+    let valB = b[adminAccountsSortKey] || "";
+    if (typeof valA === "string") valA = valA.toLowerCase();
+    if (typeof valB === "string") valB = valB.toLowerCase();
+    if (valA < valB) return adminAccountsSortAsc ? -1 : 1;
+    if (valA > valB) return adminAccountsSortAsc ? 1 : -1;
+    return 0;
+  });
+
+  // Update filter pills UI
+  const filterBtns = document.querySelectorAll(".admin-acc-filter-btn");
+  filterBtns.forEach(btn => {
+    const r = btn.getAttribute("data-role");
+    if (r === adminAccountsFilterRole) {
+      btn.className = "admin-acc-filter-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-teal-700 text-white shadow-2xs transition-all cursor-pointer";
+    } else {
+      btn.className = "admin-acc-filter-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all cursor-pointer";
+    }
+  });
+
+  // Update header sort indicators
+  const headers = document.querySelectorAll(".admin-acc-th");
+  headers.forEach(th => {
+    const k = th.getAttribute("data-sort");
+    const icon = th.querySelector(".sort-icon");
+    if (icon) {
+      if (k === adminAccountsSortKey) {
+        icon.className = `sort-icon inline-block ml-1 font-black ${adminAccountsSortAsc ? 'text-teal-700' : 'text-rose-700'}`;
+        icon.textContent = adminAccountsSortAsc ? "▲" : "▼";
+      } else {
+        icon.className = "sort-icon inline-block ml-1 text-slate-300";
+        icon.textContent = "⇅";
+      }
+    }
+  });
+
+  if (list.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" class="py-6 text-center text-slate-400">
+          Không tìm thấy tài khoản nào phù hợp với bộ lọc hiện tại.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = list.map(acc => `
+    <tr class="hover:bg-slate-50 transition-colors">
+      <td class="px-4 py-3 font-bold text-slate-900 flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg ${acc.role === 'admin' ? 'bg-rose-600' : (acc.role === 'doctor' ? 'bg-teal-600' : 'bg-indigo-600')} text-white text-xs font-bold flex items-center justify-center shrink-0 shadow-2xs">
+          ${acc.avatar}
+        </div>
+        <div>
+          <div class="text-xs font-bold text-slate-900">${acc.fullName}</div>
+          <div class="text-[10px] text-slate-400 font-normal">${acc.title || ""}</div>
+        </div>
+      </td>
+      <td class="px-4 py-3 text-slate-600 font-mono text-xs">${acc.email}</td>
+      <td class="px-4 py-3 text-slate-600 text-xs">${acc.department}</td>
+      <td class="px-4 py-3">
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${acc.roleBadgeClass}">
+          ${acc.roleLabel}
+        </span>
+      </td>
+      <td class="px-4 py-3 text-right">
+        <span class="inline-flex items-center gap-1.5 text-emerald-700 font-bold text-[11px] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Hoạt động
+        </span>
+      </td>
+    </tr>
+  `).join("");
 }
 
 export function closeAdminPanelModal() {
@@ -565,6 +894,7 @@ export function switchAdminTab(tabName) {
     btnDrugs.className = "px-4 py-2.5 font-bold text-xs sm:text-sm rounded-t-xl text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition-all";
     contentOverview.classList.remove("hidden");
     contentDrugs.classList.add("hidden");
+    renderAdminAccountsTable();
   }
   if (window.lucide) window.lucide.createIcons();
 }
@@ -1773,6 +2103,13 @@ function setupGlobalWindowBindings() {
   window.handleDeleteDrug = handleDeleteDrug;
   window.openQuickPdfModal = openQuickPdfModal;
   window.closeQuickPdfModal = closeQuickPdfModal;
+
+  // Admin module overview & account table bindings
+  window.adminNavigateToModule = adminNavigateToModule;
+  window.sortAdminAccounts = sortAdminAccounts;
+  window.filterAdminAccountsByRole = filterAdminAccountsByRole;
+  window.searchAdminAccounts = searchAdminAccounts;
+  window.renderAdminAccountsTable = renderAdminAccountsTable;
 
   // PDF attachment bindings
   window.handlePdfFileUpload = handlePdfFileUpload;
