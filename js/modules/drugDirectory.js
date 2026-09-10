@@ -928,6 +928,18 @@ function escapeHtml(s) {
   return String(s || "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m]));
 }
 
+// Quick Search shortcut from Home Banner
+export function searchDrugQuickly(query) {
+  currentSearchQuery = (query || "").trim().toLowerCase();
+  currentPage = 1;
+  const searchInput = document.getElementById("drugSearchInput");
+  if (searchInput) searchInput.value = query || "";
+  renderDrugList();
+  if (window.navigateToSection) {
+    window.navigateToSection("drugs");
+  }
+}
+
 // Global binds
 window.viewDrugDetails = openDrugModal;
 window.switchDrugTab = switchDrugTab;
@@ -938,3 +950,4 @@ window.renderDrugList = renderDrugList;
 window.viewDrugPdfInModal = viewDrugPdfInModal;
 window.openPdfInNewWindow = openPdfInNewWindow;
 window.downloadPdfAttachment = downloadPdfAttachment;
+window.searchDrugQuickly = searchDrugQuickly;
