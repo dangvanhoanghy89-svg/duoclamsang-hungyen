@@ -2,13 +2,13 @@
  * PHARMAVITA / CLINICALRX - CORE APPLICATION ENTRY POINT
  */
 
-import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260910_v17_mobile_optimized";
-import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260910_v17_mobile_optimized";
-import { initCalculators } from "./modules/calculators.js?v=20260910_v17_mobile_optimized";
-import { initConsultationModule } from "./modules/consultation.js?v=20260910_v17_mobile_optimized";
-import { initAdrModule } from "./modules/adrReporting.js?v=20260910_v17_mobile_optimized";
-import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260910_v17_mobile_optimized";
-import { initAuthModule } from "./modules/auth.js?v=20260910_v17_mobile_optimized";
+import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260910_v18_home_streamlined";
+import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260910_v18_home_streamlined";
+import { initCalculators } from "./modules/calculators.js?v=20260910_v18_home_streamlined";
+import { initConsultationModule } from "./modules/consultation.js?v=20260910_v18_home_streamlined";
+import { initAdrModule } from "./modules/adrReporting.js?v=20260910_v18_home_streamlined";
+import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260910_v18_home_streamlined";
+import { initAuthModule } from "./modules/auth.js?v=20260910_v18_home_streamlined";
 
 function initApp() {
   console.log("Khởi động ClinicalRx - Nền tảng Thông tin Thuốc & Dược Lâm Sàng (Mobile Optimized)");
