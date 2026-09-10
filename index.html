@@ -147,51 +147,72 @@
   <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-24 lg:pb-8">
 
     <!-- ================================================================ -->
-    <!-- SECTION 1: TRANG CHỦ (HERO & DASHBOARD)                          -->
+    <!-- ================================================================ -->
+    <!-- SECTION 1: TRANG CHỦ (CLINICAL HUB & TRUNG TÂM TÁC NGHIỆP)        -->
     <!-- ================================================================ -->
     <section id="home" class="app-section space-y-8 animate-in fade-in duration-300">
       
-      <!-- Hero Banner BVĐK Tỉnh Hưng Yên -->
-      <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-teal-950 via-teal-900 to-slate-900 text-white p-4 sm:p-8 lg:p-10 shadow-xl border border-teal-700/40">
-        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 sm:gap-8 relative z-10">
-          <div class="max-w-3xl space-y-3 sm:space-y-4">
+      <!-- Hero Banner BVĐK Tỉnh Hưng Yên with Integrated Smart Search -->
+      <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-teal-950 via-teal-900 to-slate-900 text-white p-5 sm:p-8 lg:p-10 shadow-xl border border-teal-700/40">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
+          <div class="max-w-3xl space-y-3.5 w-full">
+            
             <div class="flex flex-wrap items-center gap-2">
-              <div class="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-semibold bg-white/10 text-teal-200 border border-white/15 backdrop-blur-xs">
-                <img src="./assets/logo-bvdk-hung-yen.png" alt="BVĐK Hưng Yên" class="w-5 h-5 sm:w-6 sm:h-6 object-contain rounded-full bg-white p-0.5 shadow-2xs">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-white/10 text-teal-200 border border-white/15 backdrop-blur-xs">
+                <img src="./assets/logo-bvdk-hung-yen.png" alt="BVĐK Hưng Yên" class="w-5 h-5 object-contain rounded-full bg-white p-0.5 shadow-2xs">
                 <span class="font-bold tracking-wide">BỆNH VIỆN ĐA KHOA TỈNH HƯNG YÊN</span>
               </div>
-              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
-                <i data-lucide="shield-check" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
                 <span>Khoa Dược · Tổ Dược Lâm Sàng</span>
               </span>
             </div>
 
-            <h1 class="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
+            <h1 class="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight">
               Cổng Thông Tin Thuốc & Hỗ Trợ Ra Quyết Định <span class="text-teal-300">Dược Lâm Sàng</span>
             </h1>
 
             <p class="text-xs sm:text-sm text-teal-100/90 leading-relaxed max-w-2xl">
-              Hệ thống tra cứu chuyên môn dành cho Bác sĩ, Dược sĩ và Điều dưỡng Bệnh viện Đa khoa tỉnh Hưng Yên: Tối ưu hóa phác đồ điều trị, cảnh báo tương tác thuốc đa chiều, hiệu chỉnh liều suy thận - suy gan tức thời và kết nối hội chẩn ca bệnh theo y học chứng cứ.
+              Nền tảng tra cứu và thực hành dược lâm sàng nội viện: Chuẩn hóa 744 chuyên luận Dược thư Quốc gia 2022, cảnh báo tương tác thuốc đa chiều, tính toán liều cá thể hóa và hội chẩn ca bệnh theo y học chứng cứ.
             </p>
 
-            <div class="pt-2 grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm font-semibold">
-              <button id="heroAuthBtn" onclick="window.openLoginModal()" class="col-span-2 sm:col-span-1 px-4 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-black transition-all shadow-lg flex items-center justify-center gap-2 ring-2 ring-emerald-300/80 cursor-pointer">
+            <!-- Thanh tìm kiếm nhanh chuyên luận thuốc ngay trên Hero -->
+            <div class="pt-2">
+              <div class="relative max-w-2xl">
+                <div class="relative flex items-center">
+                  <i data-lucide="search" class="w-5 h-5 absolute left-4 text-teal-300 pointer-events-none"></i>
+                  <input id="homeQuickSearchInput" type="text" 
+                    placeholder="Nhập tên hoạt chất (Paracetamol, Meropenem...) hoặc biệt dược để tra cứu nhanh..."
+                    onkeydown="if(event.key==='Enter') { window.searchDrugQuickly(this.value); }"
+                    class="w-full pl-12 pr-28 py-3.5 bg-white/15 hover:bg-white/20 focus:bg-white text-white focus:text-slate-900 placeholder-teal-200/80 focus:placeholder-slate-400 border border-teal-400/40 focus:border-teal-500 rounded-2xl outline-none text-xs sm:text-sm backdrop-blur-md transition-all shadow-inner font-medium">
+                  <button type="button" 
+                    onclick="window.searchDrugQuickly(document.getElementById('homeQuickSearchInput').value)"
+                    class="absolute right-2 px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs shadow-md transition-all cursor-pointer flex items-center gap-1.5">
+                    <span>Tra cứu</span>
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+                
+                <!-- Gợi ý từ khóa tra cứu thường gặp -->
+                <div class="flex flex-wrap items-center gap-1.5 mt-2.5 text-[11px] text-teal-200/90">
+                  <span class="font-medium text-teal-300/80">Tìm nhanh:</span>
+                  <button onclick="window.searchDrugQuickly('Vancomycin')" class="px-2 py-0.5 rounded-md bg-white/10 hover:bg-white/20 text-white font-mono cursor-pointer transition-colors">Vancomycin</button>
+                  <button onclick="window.searchDrugQuickly('Meropenem')" class="px-2 py-0.5 rounded-md bg-white/10 hover:bg-white/20 text-white font-mono cursor-pointer transition-colors">Meropenem</button>
+                  <button onclick="window.searchDrugQuickly('Amoxicillin')" class="px-2 py-0.5 rounded-md bg-white/10 hover:bg-white/20 text-white font-mono cursor-pointer transition-colors">Amoxicillin</button>
+                  <button onclick="window.searchDrugQuickly('Metformin')" class="px-2 py-0.5 rounded-md bg-white/10 hover:bg-white/20 text-white font-mono cursor-pointer transition-colors">Metformin</button>
+                  <button onclick="window.searchDrugQuickly('Enoxaparin')" class="px-2 py-0.5 rounded-md bg-white/10 hover:bg-white/20 text-white font-mono cursor-pointer transition-colors">Enoxaparin</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nút Đăng nhập & Quyền truy cập -->
+            <div class="pt-1">
+              <button id="heroAuthBtn" onclick="window.openLoginModal()" class="px-4 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-black text-xs sm:text-sm transition-all shadow-lg inline-flex items-center gap-2 ring-2 ring-emerald-300/80 cursor-pointer">
                 <i data-lucide="key-round" class="w-4 h-4 text-slate-950"></i>
                 <span>ĐĂNG NHẬP (ADMIN / BÁC SĨ)</span>
               </button>
-              <button onclick="window.navigateToSection('drugs')" class="px-3.5 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/20 font-bold transition-all flex items-center justify-center gap-1.5 sm:gap-2">
-                <i data-lucide="search" class="w-4 h-4"></i>
-                <span>Tra cứu thuốc</span>
-              </button>
-              <button onclick="window.navigateToSection('interactions')" class="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all flex items-center justify-center gap-1.5 sm:gap-2">
-                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
-                <span>Tương tác thuốc</span>
-              </button>
-              <button onclick="window.navigateToSection('consultation')" class="col-span-2 sm:col-span-1 px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all flex items-center justify-center gap-1.5 sm:gap-2">
-                <i data-lucide="message-square" class="w-4 h-4 text-emerald-200"></i>
-                <span>Hội chẩn lâm sàng</span>
-              </button>
             </div>
+
           </div>
 
           <!-- Huy hiệu Logo Bệnh viện bên phải banner -->
@@ -208,124 +229,153 @@
         <div class="absolute -right-12 -bottom-16 w-80 h-80 rounded-full bg-teal-500/10 blur-3xl pointer-events-none"></div>
       </div>
 
-      <!-- Quick Clinical Stats Cards -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-        <div onclick="window.navigateToSection('drugs')" class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-2.5 sm:gap-3 cursor-pointer hover:border-teal-400 hover:shadow-sm transition-all group">
-          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-            <i data-lucide="book-open" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-          </div>
-          <div class="min-w-0">
-            <div class="text-sm sm:text-base lg:text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors truncate">Tra cứu thuốc</div>
-            <div class="text-[11px] sm:text-xs text-slate-500 font-medium truncate">Liều & Chỉnh suy thận</div>
-          </div>
-        </div>
-
-        <div onclick="window.navigateToSection('interactions')" class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-2.5 sm:gap-3 cursor-pointer hover:border-rose-400 hover:shadow-sm transition-all group">
-          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-            <i data-lucide="layers" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-          </div>
-          <div class="min-w-0">
-            <div class="text-sm sm:text-base lg:text-lg font-bold text-slate-900 group-hover:text-rose-700 transition-colors truncate">Tương tác thuốc</div>
-            <div class="text-[11px] sm:text-xs text-slate-500 font-medium truncate">Cơ chế CYP450 & QT</div>
-          </div>
-        </div>
-
-        <div onclick="window.navigateToSection('calculators')" class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-2.5 sm:gap-3 cursor-pointer hover:border-blue-400 hover:shadow-sm transition-all group">
-          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-            <i data-lucide="calculator" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-          </div>
-          <div class="min-w-0">
-            <div class="text-sm sm:text-base lg:text-lg font-bold text-slate-900 group-hover:text-blue-700 transition-colors truncate">Công cụ tính toán</div>
-            <div class="text-[11px] sm:text-xs text-slate-500 font-medium truncate">CrCl, eGFR, TDM</div>
-          </div>
-        </div>
-
-        <div onclick="window.navigateToSection('consultation')" class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-2.5 sm:gap-3 cursor-pointer hover:border-emerald-400 hover:shadow-sm transition-all group">
-          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-            <i data-lucide="users" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-          </div>
-          <div class="min-w-0">
-            <div class="text-sm sm:text-base lg:text-lg font-bold text-slate-900 group-hover:text-emerald-700 transition-colors truncate">Hội chẩn lâm sàng</div>
-            <div class="text-[11px] sm:text-xs text-slate-500 font-medium truncate">Bác sĩ ⟷ Dược sĩ</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 6 Functional Modules Grid -->
+      <!-- 6 Phân Hệ Chức Năng Lâm Sàng Chính (Cấu trúc thẻ rõ ràng, không trùng lặp) -->
       <div>
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-5">
           <div>
-            <h2 class="text-base sm:text-lg font-bold text-slate-900">Phân Hệ Chức Năng Lâm Sàng</h2>
-            <p class="text-xs text-slate-500">Truy cập nhanh các công cụ thực hành thường quy tại buồng bệnh</p>
+            <h2 class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2">
+              <i data-lucide="layout-grid" class="w-5 h-5 text-teal-600"></i>
+              <span>Phân Hệ Chức Năng Lâm Sàng</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">Chọn phân hệ chuyên môn để bắt đầu tác nghiệp điều trị</p>
           </div>
+          <span class="text-xs font-semibold text-slate-400 self-start sm:self-auto">
+            Hệ thống 6 phân hệ tích hợp
+          </span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           
-          <!-- Card 1 -->
-          <div onclick="window.navigateToSection('drugs')" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-teal-400 hover:shadow-md transition-all cursor-pointer group">
-            <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-              <i data-lucide="file-search" class="w-5 h-5"></i>
+          <!-- Phân hệ 1: Tra cứu thuốc -->
+          <div onclick="window.navigateToSection('drugs')" 
+            class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-teal-500 hover:shadow-lg transition-all duration-200 cursor-pointer group flex flex-col justify-between relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-teal-50 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110 pointer-events-none"></div>
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-teal-50 border border-teal-200/60 text-teal-700 flex items-center justify-center mb-3.5 group-hover:bg-teal-600 group-hover:text-white transition-all shadow-2xs">
+                <i data-lucide="book-open" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1.5">
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-teal-700 transition-colors">1. Tra cứu thuốc</h3>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200">744 Thuốc</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Chỉ định, liều lượng, bảng chỉnh liều theo suy thận (CrCl), cảnh báo thai kỳ và 7 phần chuyên sâu chuẩn Dược thư 2022.
+              </p>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-teal-700 transition-colors">1. Tra cứu thuốc</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Thông tin chuyên sâu về chỉ định, liều dùng, bảng chỉnh liều theo CrCl suy thận, cảnh báo hộp đen và dữ liệu thai kỳ.
-            </p>
+            <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-teal-700 group-hover:translate-x-0.5 transition-transform">
+              <span>Mở danh mục Dược thư</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </div>
           </div>
 
-          <!-- Card 2 -->
-          <div onclick="window.navigateToSection('interactions')" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-rose-400 hover:shadow-md transition-all cursor-pointer group">
-            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-              <i data-lucide="alert-octagon" class="w-5 h-5"></i>
+          <!-- Phân hệ 2: Tương tác thuốc -->
+          <div onclick="window.navigateToSection('interactions')" 
+            class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-rose-500 hover:shadow-lg transition-all duration-200 cursor-pointer group flex flex-col justify-between relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110 pointer-events-none"></div>
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-rose-50 border border-rose-200/60 text-rose-700 flex items-center justify-center mb-3.5 group-hover:bg-rose-600 group-hover:text-white transition-all shadow-2xs">
+                <i data-lucide="layers" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1.5">
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-rose-700 transition-colors">2. Tương tác thuốc</h3>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-800 border border-rose-200">Đa thuốc</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Kiểm tra đồng thời nhiều thuốc trong đơn, cảnh báo tương tác nghiêm trọng, cơ chế enzym gan CYP450 và khuyến cáo xử trí.
+              </p>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-rose-700 transition-colors">2. Tương tác thuốc</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Phân tích đồng thời nhiều thuốc trong đơn, cảnh báo chống chỉ định, cơ chế ức chế/cảm ứng enzym gan và gợi ý xử trí.
-            </p>
+            <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-rose-700 group-hover:translate-x-0.5 transition-transform">
+              <span>Kiểm tra đơn thuốc</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </div>
           </div>
 
-          <!-- Card 3 -->
-          <div onclick="window.navigateToSection('calculators')" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-              <i data-lucide="binary" class="w-5 h-5"></i>
+          <!-- Phân hệ 3: Công cụ tính toán -->
+          <div onclick="window.navigateToSection('calculators')" 
+            class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 hover:shadow-lg transition-all duration-200 cursor-pointer group flex flex-col justify-between relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110 pointer-events-none"></div>
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200/60 text-blue-700 flex items-center justify-center mb-3.5 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
+                <i data-lucide="calculator" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1.5">
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">3. Công cụ tính toán</h3>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200">Lâm sàng</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Thước tính Cockcroft-Gault, CKD-EPI 2021, BMI, BSA diện tích da, quy đổi liều tương đương Corticoid và liều TDM Vancomycin.
+              </p>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">3. Công cụ tính toán</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Tính Cockcroft-Gault, CKD-EPI 2021, BMI, diện tích da BSA, quy đổi liều tương đương Corticoid và liều nạp Vancomycin.
-            </p>
+            <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-700 group-hover:translate-x-0.5 transition-transform">
+              <span>Mở bộ máy tính y khoa</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </div>
           </div>
 
-          <!-- Card 4 -->
-          <div onclick="window.navigateToSection('iv')" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-amber-400 hover:shadow-md transition-all cursor-pointer group">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-              <i data-lucide="git-merge" class="w-5 h-5"></i>
+          <!-- Phân hệ 4: Tương hợp - Tương kỵ -->
+          <div onclick="window.navigateToSection('iv')" 
+            class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-amber-500 hover:shadow-lg transition-all duration-200 cursor-pointer group flex flex-col justify-between relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110 pointer-events-none"></div>
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200/60 text-amber-700 flex items-center justify-center mb-3.5 group-hover:bg-amber-600 group-hover:text-white transition-all shadow-2xs">
+                <i data-lucide="git-merge" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1.5">
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-amber-700 transition-colors">4. Tương hợp - Tương kỵ</h3>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">Đường truyền Y-site</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Tra cứu tương hợp dịch pha (NaCl 0.9%, Glucose 5%, Ringer) và tương kỵ vật lý - hóa học khi tiêm truyền tĩnh mạch đồng thời.
+              </p>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-amber-700 transition-colors">4. Tương hợp - Tương kỵ</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Tra cứu độ tương hợp và tương kỵ khi truyền chung đường truyền tĩnh mạch hoặc dịch pha (NS, D5W, Ringer Lactate).
-            </p>
+            <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-amber-700 group-hover:translate-x-0.5 transition-transform">
+              <span>Tra cứu tương hợp tiêm truyền</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </div>
           </div>
 
-          <!-- Card 5 -->
-          <div onclick="window.navigateToSection('consultation')" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer group">
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-              <i data-lucide="messages-square" class="w-5 h-5"></i>
+          <!-- Phân hệ 5: Hội chẩn lâm sàng -->
+          <div onclick="window.navigateToSection('consultation')" 
+            class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-emerald-500 hover:shadow-lg transition-all duration-200 cursor-pointer group flex flex-col justify-between relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110 pointer-events-none"></div>
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200/60 text-emerald-700 flex items-center justify-center mb-3.5 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-2xs">
+                <i data-lucide="messages-square" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1.5">
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">5. Hội chẩn lâm sàng</h3>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">Bác sĩ ⟷ Dược sĩ</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Kênh trao đổi chuyên môn trực tiếp giữa Bác sĩ điều trị và Dược sĩ lâm sàng: Tư vấn phác đồ, TDM và hỗ trợ y học chứng cứ.
+              </p>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">5. Hội chẩn lâm sàng</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Bác sĩ gửi yêu cầu tư vấn thông tin thuốc, Dược sĩ phản hồi theo y học chứng cứ (EBM), có trợ lý AI gợi ý phác thảo.
-            </p>
+            <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-700 group-hover:translate-x-0.5 transition-transform">
+              <span>Gửi ca bệnh & Phản hồi</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </div>
           </div>
 
-          <!-- Card 6 -->
-          <div onclick="window.navigateToSection('adr')" class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-purple-400 hover:shadow-md transition-all cursor-pointer group">
-            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-              <i data-lucide="clipboard-pen-line" class="w-5 h-5"></i>
+          <!-- Phân hệ 6: Báo cáo ADR -->
+          <div onclick="window.navigateToSection('adr')" 
+            class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-purple-500 hover:shadow-lg transition-all duration-200 cursor-pointer group flex flex-col justify-between relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110 pointer-events-none"></div>
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200/60 text-purple-700 flex items-center justify-center mb-3.5 group-hover:bg-purple-600 group-hover:text-white transition-all shadow-2xs">
+                <i data-lucide="clipboard-pen-line" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1.5">
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-purple-700 transition-colors">6. Báo cáo ADR</h3>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-purple-800 border border-purple-200">Mẫu Bộ Y Tế</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Báo cáo phản ứng có hại của thuốc theo biểu mẫu chuẩn, tích hợp thang điểm thuật toán thẩm định nhân quả Naranjo.
+              </p>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-purple-700 transition-colors">6. Báo cáo ADR</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Biểu mẫu báo cáo phản ứng bất lợi chuẩn Bộ Y tế, tích hợp thuật toán đánh giá mối liên quan nhân quả Naranjo 10 điểm.
-            </p>
+            <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-purple-700 group-hover:translate-x-0.5 transition-transform">
+              <span>Gửi báo cáo ADR</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </div>
           </div>
 
         </div>
@@ -1542,7 +1592,7 @@
   </script>
 
   <!-- Master Application Script (ES Module) -->
-  <script type="module" src="./js/app.js?v=20260910_v17_mobile_optimized"></script>
+  <script type="module" src="./js/app.js?v=20260910_v18_home_streamlined"></script>
 
 </body>
 </html>
