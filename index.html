@@ -139,7 +139,7 @@
       <button data-nav-target="calculators" class="w-full text-left px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700">Công cụ tính toán</button>
       <button data-nav-target="iv" class="w-full text-left px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700">Tương hợp - Tương kỵ</button>
       <button data-nav-target="consultation" class="w-full text-left px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700">Hội chẩn lâm sàng</button>
-      <button data-nav-target="adr" class="w-full text-left px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700">Cảnh giác dược ADR</button>
+      <button data-nav-target="adr" class="w-full text-left px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700">Báo cáo ADR</button>
     </div>
   </header>
 
@@ -210,42 +210,42 @@
 
       <!-- Quick Clinical Stats Cards -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
+        <div onclick="window.navigateToSection('drugs')" class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3 cursor-pointer hover:border-teal-400 hover:shadow-sm transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
             <i data-lucide="book-open" class="w-5 h-5"></i>
           </div>
           <div>
-            <div class="text-xl font-bold text-slate-900">Dược thư Chuẩn</div>
+            <div class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors">Tra cứu thuốc</div>
             <div class="text-xs text-slate-500 font-medium">Liều dùng & Chỉnh suy thận</div>
           </div>
         </div>
 
-        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center shrink-0">
+        <div onclick="window.navigateToSection('interactions')" class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3 cursor-pointer hover:border-rose-400 hover:shadow-sm transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
             <i data-lucide="layers" class="w-5 h-5"></i>
           </div>
           <div>
-            <div class="text-xl font-bold text-slate-900">Đa tương tác</div>
+            <div class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-rose-700 transition-colors">Tương tác thuốc</div>
             <div class="text-xs text-slate-500 font-medium">Cơ chế CYP450 & QT</div>
           </div>
         </div>
 
-        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+        <div onclick="window.navigateToSection('calculators')" class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3 cursor-pointer hover:border-blue-400 hover:shadow-sm transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
             <i data-lucide="calculator" class="w-5 h-5"></i>
           </div>
           <div>
-            <div class="text-xl font-bold text-slate-900">6+ Máy tính</div>
+            <div class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-700 transition-colors">Công cụ tính toán</div>
             <div class="text-xs text-slate-500 font-medium">CrCl, eGFR, TDM, Corticoid</div>
           </div>
         </div>
 
-        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+        <div onclick="window.navigateToSection('consultation')" class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3 cursor-pointer hover:border-emerald-400 hover:shadow-sm transition-all group">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
             <i data-lucide="users" class="w-5 h-5"></i>
           </div>
           <div>
-            <div class="text-xl font-bold text-slate-900">Hội chẩn EBM</div>
+            <div class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">Hội chẩn lâm sàng</div>
             <div class="text-xs text-slate-500 font-medium">Bác sĩ ⟷ Dược sĩ</div>
           </div>
         </div>
@@ -267,7 +267,7 @@
             <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
               <i data-lucide="file-search" class="w-5 h-5"></i>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-teal-700 transition-colors">1. Tra cứu Dược thư Lâm sàng</h3>
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-teal-700 transition-colors">1. Tra cứu thuốc</h3>
             <p class="text-xs text-slate-500 mt-1 leading-relaxed">
               Thông tin chuyên sâu về chỉ định, liều dùng, bảng chỉnh liều theo CrCl suy thận, cảnh báo hộp đen và dữ liệu thai kỳ.
             </p>
@@ -278,7 +278,7 @@
             <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
               <i data-lucide="alert-octagon" class="w-5 h-5"></i>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-rose-700 transition-colors">2. Kiểm tra Tương tác Đa thuốc</h3>
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-rose-700 transition-colors">2. Tương tác thuốc</h3>
             <p class="text-xs text-slate-500 mt-1 leading-relaxed">
               Phân tích đồng thời nhiều thuốc trong đơn, cảnh báo chống chỉ định, cơ chế ức chế/cảm ứng enzym gan và gợi ý xử trí.
             </p>
@@ -289,7 +289,7 @@
             <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
               <i data-lucide="binary" class="w-5 h-5"></i>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">3. Máy tính Dược lâm sàng</h3>
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">3. Công cụ tính toán</h3>
             <p class="text-xs text-slate-500 mt-1 leading-relaxed">
               Tính Cockcroft-Gault, CKD-EPI 2021, BMI, diện tích da BSA, quy đổi liều tương đương Corticoid và liều nạp Vancomycin.
             </p>
@@ -300,7 +300,7 @@
             <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
               <i data-lucide="git-merge" class="w-5 h-5"></i>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-amber-700 transition-colors">4. Tương dung Tiêm truyền Y-site</h3>
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-amber-700 transition-colors">4. Tương hợp - Tương kỵ</h3>
             <p class="text-xs text-slate-500 mt-1 leading-relaxed">
               Tra cứu độ tương hợp và tương kỵ khi truyền chung đường truyền tĩnh mạch hoặc dịch pha (NS, D5W, Ringer Lactate).
             </p>
@@ -311,7 +311,7 @@
             <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
               <i data-lucide="messages-square" class="w-5 h-5"></i>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">5. Cổng Hội chẩn Ca bệnh DIC</h3>
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">5. Hội chẩn lâm sàng</h3>
             <p class="text-xs text-slate-500 mt-1 leading-relaxed">
               Bác sĩ gửi yêu cầu tư vấn thông tin thuốc, Dược sĩ phản hồi theo y học chứng cứ (EBM), có trợ lý AI gợi ý phác thảo.
             </p>
@@ -322,7 +322,7 @@
             <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
               <i data-lucide="clipboard-pen-line" class="w-5 h-5"></i>
             </div>
-            <h3 class="text-base font-bold text-slate-900 group-hover:text-purple-700 transition-colors">6. Báo cáo ADR & Dược cảnh giác</h3>
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-purple-700 transition-colors">6. Báo cáo ADR</h3>
             <p class="text-xs text-slate-500 mt-1 leading-relaxed">
               Biểu mẫu báo cáo phản ứng bất lợi chuẩn Bộ Y tế, tích hợp thuật toán đánh giá mối liên quan nhân quả Naranjo 10 điểm.
             </p>
@@ -1284,11 +1284,12 @@
           </div>
         </div>
         <div class="flex flex-wrap gap-4 font-semibold text-slate-600">
-          <a href="#drugs" onclick="window.navigateToSection('drugs')" class="hover:text-teal-700">Dược thư</a>
-          <a href="#interactions" onclick="window.navigateToSection('interactions')" class="hover:text-teal-700">Tương tác</a>
-          <a href="#calculators" onclick="window.navigateToSection('calculators')" class="hover:text-teal-700">Máy tính</a>
+          <a href="#drugs" onclick="window.navigateToSection('drugs')" class="hover:text-teal-700">Tra cứu thuốc</a>
+          <a href="#interactions" onclick="window.navigateToSection('interactions')" class="hover:text-teal-700">Tương tác thuốc</a>
+          <a href="#calculators" onclick="window.navigateToSection('calculators')" class="hover:text-teal-700">Công cụ tính toán</a>
+          <a href="#iv" onclick="window.navigateToSection('iv')" class="hover:text-teal-700">Tương hợp - Tương kỵ</a>
           <a href="#consultation" onclick="window.navigateToSection('consultation')" class="hover:text-teal-700">Hội chẩn lâm sàng</a>
-          <a href="#adr" onclick="window.navigateToSection('adr')" class="hover:text-teal-700">Cảnh giác dược</a>
+          <a href="#adr" onclick="window.navigateToSection('adr')" class="hover:text-teal-700">Báo cáo ADR</a>
         </div>
       </div>
 
@@ -1496,7 +1497,7 @@
   </script>
 
   <!-- Master Application Script (ES Module) -->
-  <script type="module" src="./js/app.js?v=20260910_v15_adr_detail_admin"></script>
+  <script type="module" src="./js/app.js?v=20260910_v16_home_module_names"></script>
 
 </body>
 </html>
