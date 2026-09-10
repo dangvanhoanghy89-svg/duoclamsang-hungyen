@@ -2,16 +2,16 @@
  * PHARMAVITA / CLINICALRX - CORE APPLICATION ENTRY POINT
  */
 
-import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260910_v16_home_module_names";
-import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260910_v16_home_module_names";
-import { initCalculators } from "./modules/calculators.js?v=20260910_v16_home_module_names";
-import { initConsultationModule } from "./modules/consultation.js?v=20260910_v16_home_module_names";
-import { initAdrModule } from "./modules/adrReporting.js?v=20260910_v16_home_module_names";
-import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260910_v16_home_module_names";
-import { initAuthModule } from "./modules/auth.js?v=20260910_v16_home_module_names";
+import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260910_v17_mobile_optimized";
+import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260910_v17_mobile_optimized";
+import { initCalculators } from "./modules/calculators.js?v=20260910_v17_mobile_optimized";
+import { initConsultationModule } from "./modules/consultation.js?v=20260910_v17_mobile_optimized";
+import { initAdrModule } from "./modules/adrReporting.js?v=20260910_v17_mobile_optimized";
+import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260910_v17_mobile_optimized";
+import { initAuthModule } from "./modules/auth.js?v=20260910_v17_mobile_optimized";
 
 function initApp() {
-  console.log("Khởi động ClinicalRx - Nền tảng Thông tin Thuốc & Dược Lâm Sàng");
+  console.log("Khởi động ClinicalRx - Nền tảng Thông tin Thuốc & Dược Lâm Sàng (Mobile Optimized)");
 
   // Khởi tạo phân hệ Xác thực & Phân quyền
   initAuthModule();
@@ -31,6 +31,9 @@ function initApp() {
 
   // Navigation tabs handler
   setupNavigation();
+
+  // Floating Back to Top Button
+  setupBackToTop();
 }
 
 if (document.readyState === "loading") {
@@ -42,6 +45,7 @@ if (document.readyState === "loading") {
 function setupNavigation() {
   const navLinks = document.querySelectorAll("[data-nav-target]");
   const sections = document.querySelectorAll(".app-section");
+  const mobileNavBtns = document.querySelectorAll("#mobileBottomNav [data-nav-target]");
 
   const switchSection = (targetId) => {
     sections.forEach(sec => {
@@ -52,13 +56,31 @@ function setupNavigation() {
       }
     });
 
+    // Cập nhật desktop & drawer nav links
     navLinks.forEach(link => {
+      if (link.closest("#mobileBottomNav")) return;
       if (link.getAttribute("data-nav-target") === targetId) {
         link.classList.add("text-teal-700", "font-bold", "bg-teal-50", "border-teal-600");
         link.classList.remove("text-slate-600", "border-transparent");
       } else {
         link.classList.remove("text-teal-700", "font-bold", "bg-teal-50", "border-teal-600");
         link.classList.add("text-slate-600", "border-transparent");
+      }
+    });
+
+    // Cập nhật mobile bottom bar active state
+    mobileNavBtns.forEach(btn => {
+      const isCurrent = btn.getAttribute("data-nav-target") === targetId;
+      if (isCurrent) {
+        btn.classList.add("text-teal-700", "font-bold");
+        btn.classList.remove("text-slate-500");
+        const icon = btn.querySelector("i, svg");
+        if (icon) icon.classList.add("stroke-[2.5px]");
+      } else {
+        btn.classList.remove("text-teal-700", "font-bold");
+        btn.classList.add("text-slate-500");
+        const icon = btn.querySelector("i, svg");
+        if (icon) icon.classList.remove("stroke-[2.5px]");
       }
     });
 
@@ -120,6 +142,25 @@ function setupNavigation() {
       });
     });
   }
+}
+
+function setupBackToTop() {
+  const backToTopBtn = document.getElementById("backToTopBtn");
+  if (!backToTopBtn) return;
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      backToTopBtn.classList.remove("opacity-0", "pointer-events-none", "translate-y-3");
+      backToTopBtn.classList.add("opacity-100", "pointer-events-auto", "translate-y-0");
+    } else {
+      backToTopBtn.classList.add("opacity-0", "pointer-events-none", "translate-y-3");
+      backToTopBtn.classList.remove("opacity-100", "pointer-events-auto", "translate-y-0");
+    }
+  }, { passive: true });
+
+  backToTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 }
 
 // Shortcut điều hướng toàn cục
