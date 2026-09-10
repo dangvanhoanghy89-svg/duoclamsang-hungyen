@@ -347,74 +347,76 @@ export function openDrugModal(drugId) {
       <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in duration-200">
         
         <!-- Header Modal -->
-        <div class="px-6 py-5 bg-gradient-to-r from-teal-800 via-teal-700 to-slate-900 text-white flex items-start justify-between">
-          <div>
-            <div class="flex items-center gap-2 mb-1 flex-wrap">
-              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/20 text-white backdrop-blur-xs">
+        <div class="px-4 py-4 sm:px-6 sm:py-5 bg-gradient-to-r from-teal-800 via-teal-700 to-slate-900 text-white flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5 sm:gap-2 mb-1 flex-wrap">
+              <span class="px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-white/20 text-white backdrop-blur-xs">
                 ${drug.category}
               </span>
-              <span class="px-2 py-0.5 rounded text-xs font-mono bg-black/20 text-teal-100">
+              <span class="px-1.5 py-0.5 rounded text-[10px] sm:text-xs font-mono bg-black/20 text-teal-100">
                 ATC: ${drug.atcCode}
               </span>
-              <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-400 text-slate-950 shadow-xs">
-                DƯỢC THƯ QGVN 2022
+              <span class="hidden xs:inline-block px-1.5 py-0.5 rounded text-[10px] sm:text-[11px] font-bold bg-amber-400 text-slate-950 shadow-xs">
+                DƯỢC THƯ 2022
               </span>
               ${drug.attachments && drug.attachments.length > 0 ? `
-                <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-500 text-white shadow-xs flex items-center gap-1">
+                <span class="px-1.5 py-0.5 rounded text-[10px] sm:text-[11px] font-bold bg-rose-500 text-white shadow-xs flex items-center gap-1">
                   <i data-lucide="file-text" class="w-3 h-3"></i>
-                  ${drug.attachments.length} FILE PDF
+                  ${drug.attachments.length} PDF
                 </span>
               ` : ''}
             </div>
-            <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">${drug.name}</h2>
-            <p class="text-sm text-teal-100/90 font-medium mt-0.5">
-              Hoạt chất chuẩn (INN): <strong class="text-white">${drug.inn}</strong> | Dạng dùng: ${drug.dosageForm}
+            <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight truncate">${drug.name}</h2>
+            <p class="text-xs sm:text-sm text-teal-100/90 font-medium mt-0.5 truncate">
+              Hoạt chất (INN): <strong class="text-white">${drug.inn}</strong> | ${drug.dosageForm}
             </p>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button onclick="window.switchDrugTab('pdf')" 
               title="Xem Phần 7: Tài liệu chuyên môn đính kèm (PDF)"
-              class="inline-flex items-center gap-1.5 bg-rose-600 hover:bg-rose-500 text-white font-black px-3.5 py-1.5 rounded-xl text-xs shadow-md transition-all cursor-pointer">
-              <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-              <span>Phần 7: File PDF (${drug.attachments ? drug.attachments.length : 0})</span>
+              class="inline-flex items-center gap-1 bg-rose-600 hover:bg-rose-500 text-white font-black px-2.5 sm:px-3.5 py-1.5 rounded-xl text-[11px] sm:text-xs shadow-md transition-all cursor-pointer">
+              <i data-lucide="file-text" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
+              <span class="hidden sm:inline">Phần 7: File PDF</span>
+              <span class="sm:hidden">PDF</span>
+              <span>(${drug.attachments ? drug.attachments.length : 0})</span>
             </button>
             ${isAdmin ? `
               <button onclick="window.closeDrugModal(); window.openEditDrugModal('${drug.id}'); setTimeout(() => document.getElementById('formSection7')?.scrollIntoView({behavior:'smooth', block:'start'}), 300);" 
                 title="Mở Form đính kèm tài liệu PDF (Admin)"
-                class="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs shadow-md transition-all cursor-pointer">
+                class="hidden sm:inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs shadow-md transition-all cursor-pointer">
                 <i data-lucide="upload" class="w-4 h-4"></i>
-                <span>Đính kèm PDF / Sửa</span>
+                <span>Sửa</span>
               </button>
             ` : ''}
             <button onclick="window.closeDrugModal()" class="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors">
-              <i data-lucide="x" class="w-6 h-6"></i>
+              <i data-lucide="x" class="w-5 h-5 sm:w-6 sm:h-6"></i>
             </button>
           </div>
         </div>
 
         <!-- Tab Controls (Đầy đủ chuẩn 7 Phần của Dược thư) -->
-        <div class="flex items-center border-b border-slate-200 bg-slate-50 px-4 sm:px-6 overflow-x-auto text-xs sm:text-sm font-semibold text-slate-600 gap-1.5 shrink-0">
-          <button onclick="window.switchDrugTab('general')" id="tab-btn-general" class="drug-tab-btn active px-3 py-3 border-b-2 border-teal-600 text-teal-700 whitespace-nowrap cursor-pointer">
+        <div class="flex items-center border-b border-slate-200 bg-slate-50 px-3 sm:px-6 overflow-x-auto text-xs sm:text-sm font-semibold text-slate-600 gap-1 sm:gap-1.5 shrink-0 touch-scroll hide-scrollbar">
+          <button onclick="window.switchDrugTab('general')" id="tab-btn-general" class="drug-tab-btn active px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-teal-600 text-teal-700 whitespace-nowrap cursor-pointer">
             1. Chỉ định & Liều
           </button>
-          <button onclick="window.switchDrugTab('renal')" id="tab-btn-renal" class="drug-tab-btn px-3 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
+          <button onclick="window.switchDrugTab('renal')" id="tab-btn-renal" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
             2. Chỉnh Thận/Gan
           </button>
-          <button onclick="window.switchDrugTab('administration')" id="tab-btn-administration" class="drug-tab-btn px-3 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
+          <button onclick="window.switchDrugTab('administration')" id="tab-btn-administration" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
             3. Cách dùng & Pha truyền
           </button>
-          <button onclick="window.switchDrugTab('safety')" id="tab-btn-safety" class="drug-tab-btn px-3 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
+          <button onclick="window.switchDrugTab('safety')" id="tab-btn-safety" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
             4. Cảnh báo & Thai kỳ
           </button>
-          <button onclick="window.switchDrugTab('adr')" id="tab-btn-adr" class="drug-tab-btn px-3 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer font-bold text-rose-700 hover:text-rose-900">
+          <button onclick="window.switchDrugTab('adr')" id="tab-btn-adr" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer font-bold text-rose-700 hover:text-rose-900">
             5. Tác dụng phụ (ADR)
           </button>
-          <button onclick="window.switchDrugTab('clinical')" id="tab-btn-clinical" class="drug-tab-btn px-3 py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer font-bold text-amber-700 hover:text-amber-900">
-            6. Dược lâm sàng & TDM
+          <button onclick="window.switchDrugTab('clinical')" id="tab-btn-clinical" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer font-bold text-amber-700 hover:text-amber-900">
+            6. Dược lâm sàng
           </button>
-          <button onclick="window.switchDrugTab('pdf')" id="tab-btn-pdf" class="drug-tab-btn px-3.5 py-2 my-1 rounded-xl whitespace-nowrap flex items-center gap-1.5 font-black text-white bg-rose-600 hover:bg-rose-700 shadow-md transition-all cursor-pointer ring-2 ring-rose-400/50">
-            <i data-lucide="file-text" class="w-3.5 h-3.5 text-white"></i>
-            <span>7. TÀI LIỆU PDF</span>
+          <button onclick="window.switchDrugTab('pdf')" id="tab-btn-pdf" class="drug-tab-btn px-2.5 sm:px-3.5 py-1.5 sm:py-2 my-1 rounded-xl whitespace-nowrap flex items-center gap-1 font-black text-white bg-rose-600 hover:bg-rose-700 shadow-md transition-all cursor-pointer ring-2 ring-rose-400/50">
+            <i data-lucide="file-text" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white"></i>
+            <span>7. PDF</span>
             <span class="ml-1 px-1.5 py-0.2 bg-white text-rose-700 text-[10px] font-black rounded-full shadow-2xs">
               ${drug.attachments ? drug.attachments.length : 0}
             </span>
@@ -422,7 +424,7 @@ export function openDrugModal(drugId) {
         </div>
 
         <!-- Body Content Tabs -->
-        <div class="p-6 overflow-y-auto space-y-6 flex-1 text-slate-700 text-sm">
+        <div class="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1 text-slate-700 text-xs sm:text-sm touch-scroll">
           
           <!-- TAB 1: GENERAL -->
           <div id="tab-content-general" class="space-y-5">
