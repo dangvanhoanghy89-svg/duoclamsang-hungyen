@@ -289,20 +289,25 @@ export async function deleteDrugFromCloud(drugId) {
 }
 
 
-export function dataUrlToBlob(dataUrl) {
+export async function dataUrlToBlob(dataUrl) {
   try {
-    const parts = dataUrl.split(";base64,");
-    const contentType = parts[0].split(":")[1] || "application/pdf";
-    const raw = atob(parts[1]);
-    const rawLength = raw.length;
-    const uInt8Array = new Uint8Array(rawLength);
-    for (let i = 0; i < rawLength; ++i) {
-      uInt8Array[i] = raw.charCodeAt(i);
-    }
-    return new Blob([uInt8Array], { type: contentType });
+    const res = await fetch(dataUrl);
+    return await res.blob();
   } catch (err) {
-    console.error("Lỗi chuyển đổi DataURL sang Blob:", err);
-    return null;
+    try {
+      const parts = dataUrl.split(";base64,");
+      const contentType = parts[0].split(":")[1] || "application/pdf";
+      const raw = atob(parts[1]);
+      const rawLength = raw.length;
+      const uInt8Array = new Uint8Array(rawLength);
+      for (let i = 0; i < rawLength; ++i) {
+        uInt8Array[i] = raw.charCodeAt(i);
+      }
+      return new Blob([uInt8Array], { type: contentType });
+    } catch (e2) {
+      console.error("Lỗi chuyển đổi DataURL sang Blob:", e2);
+      return null;
+    }
   }
 }
 
@@ -324,7 +329,7 @@ export async function uploadPdfToSupabaseStorage(fileOrDataUrl, drugId, fileName
   try {
     let blob = null;
     if (typeof fileOrDataUrl === "string" && fileOrDataUrl.startsWith("data:")) {
-      blob = dataUrlToBlob(fileOrDataUrl);
+      blob = await dataUrlToBlob(fileOrDataUrl);
     } else if (fileOrDataUrl instanceof Blob || fileOrDataUrl instanceof File) {
       blob = fileOrDataUrl;
     }
@@ -336,7 +341,7 @@ export async function uploadPdfToSupabaseStorage(fileOrDataUrl, drugId, fileName
 
     const cleanName = sanitizeFileName(fileName || "document.pdf");
     const safeDrugId = sanitizeFileName(drugId || "general");
-    const storagePath = `${safeDrugId}/${Date.now()}_${cleanName}`;
+    const storagePath = `${safeDrugId}/${cleanName}`;
 
     const { data, error } = await client.storage
       .from("drug-pdfs")
@@ -360,6 +365,50 @@ export async function uploadPdfToSupabaseStorage(fileOrDataUrl, drugId, fileName
   } catch (err) {
     console.warn("Lỗi uploadPdfToSupabaseStorage:", err);
     return null;
+  }
+}
+
+export async function autoHealMissingCloudPdfs() {
+  const client = getSupabaseClient();
+  if (!client || typeof window === "undefined") return;
+
+  try {
+    const raw = localStorage.getItem(CUSTOM_DRUGS_STORAGE_KEY);
+    if (!raw) return;
+    const store = JSON.parse(raw);
+    let changed = false;
+
+    const allDrugs = [...(store.addedDrugs || []), ...Object.values(store.modified || {})];
+    for (const drug of allDrugs) {
+      if (!drug || !Array.isArray(drug.attachments)) continue;
+      for (const att of drug.attachments) {
+        if (!att.fileUrl) {
+          let sourceData = att.dataUrl;
+          if (!sourceData && window.getPdfAttachmentById) {
+            const localAtt = await window.getPdfAttachmentById(att.id);
+            if (localAtt && localAtt.dataUrl) {
+              sourceData = localAtt.dataUrl;
+            }
+          }
+          if (sourceData) {
+            console.log("Tự động vá PDF lên Supabase Storage:", att.fileName);
+            const uploadedUrl = await uploadPdfToSupabaseStorage(sourceData, drug.id, att.fileName);
+            if (uploadedUrl) {
+              att.fileUrl = uploadedUrl;
+              changed = true;
+              await saveDrugToCloud(drug);
+              console.log("Đã tự động cập nhật URL Cloud cho:", att.fileName);
+            }
+          }
+        }
+      }
+    }
+    if (changed) {
+      localStorage.setItem(CUSTOM_DRUGS_STORAGE_KEY, JSON.stringify(store));
+      if (window.renderDrugList) window.renderDrugList();
+    }
+  } catch (e) {
+    console.warn("autoHealMissingCloudPdfs warning:", e);
   }
 }
 
@@ -549,6 +598,7 @@ if (typeof window !== "undefined") {
   window.deleteDrugFromCloud = deleteDrugFromCloud;
   window.syncCustomDrugsFromCloud = syncCustomDrugsFromCloud;
   window.uploadPdfToSupabaseStorage = uploadPdfToSupabaseStorage;
+  window.autoHealMissingCloudPdfs = autoHealMissingCloudPdfs;
   window.dataUrlToBlob = dataUrlToBlob;
 }
 

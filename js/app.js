@@ -2,14 +2,14 @@
  * PHARMAVITA / CLINICALRX - CORE APPLICATION ENTRY POINT
  */
 
-import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260911_v27_cloud_pdf_sync";
-import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260911_v27_cloud_pdf_sync";
-import { initCalculators } from "./modules/calculators.js?v=20260911_v27_cloud_pdf_sync";
-import { initConsultationModule } from "./modules/consultation.js?v=20260911_v27_cloud_pdf_sync";
-import { initAdrModule } from "./modules/adrReporting.js?v=20260911_v27_cloud_pdf_sync";
-import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260911_v27_cloud_pdf_sync";
-import { initAuthModule } from "./modules/auth.js?v=20260911_v27_cloud_pdf_sync";
-import { syncCustomDrugsFromCloud, openSupabaseModal } from "./modules/supabaseService.js?v=20260911_v27_cloud_pdf_sync";
+import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260911_v28_autoheal_pdf";
+import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260911_v28_autoheal_pdf";
+import { initCalculators } from "./modules/calculators.js?v=20260911_v28_autoheal_pdf";
+import { initConsultationModule } from "./modules/consultation.js?v=20260911_v28_autoheal_pdf";
+import { initAdrModule } from "./modules/adrReporting.js?v=20260911_v28_autoheal_pdf";
+import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260911_v28_autoheal_pdf";
+import { initAuthModule } from "./modules/auth.js?v=20260911_v28_autoheal_pdf";
+import { syncCustomDrugsFromCloud, openSupabaseModal } from "./modules/supabaseService.js?v=20260911_v28_autoheal_pdf";
 
 function initApp() {
   console.log("Khởi động ClinicalRx - Nền tảng Thông tin Thuốc & Dược Lâm Sàng (Mobile Optimized)");
@@ -25,9 +25,14 @@ function initApp() {
   initAdrModule();
   initIvCompatibilityModule();
 
-  // Tự động đồng bộ thuốc tùy biến từ Supabase Cloud trong nền
-  setTimeout(() => {
-    syncCustomDrugsFromCloud().catch(() => {});
+  // Tự động đồng bộ thuốc tùy biến và chữa lành các file PDF thiếu URL từ Supabase Cloud trong nền
+  setTimeout(async () => {
+    try {
+      await syncCustomDrugsFromCloud();
+      if (window.autoHealMissingCloudPdfs) {
+        await window.autoHealMissingCloudPdfs();
+      }
+    } catch (e) {}
   }, 1000);
 
   // Khởi tạo icons Lucide

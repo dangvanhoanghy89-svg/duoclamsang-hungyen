@@ -1901,15 +1901,21 @@ export function openQuickPdfModal(drugId) {
           }
 
           let cloudUrl = att.fileUrl || "";
-          // Nếu file mới tải từ máy tính và chưa có URL online, tự động upload lên Supabase Storage
-          if (!cloudUrl && att.dataUrl && typeof window !== "undefined" && window.uploadPdfToSupabaseStorage) {
-            try {
-              const uploaded = await window.uploadPdfToSupabaseStorage(att.dataUrl, drug.id, att.fileName);
-              if (uploaded) {
-                cloudUrl = uploaded;
+          if (!cloudUrl) {
+            let sourceData = att.dataUrl;
+            if (!sourceData && typeof window !== "undefined" && window.getPdfAttachmentById) {
+              try {
+                const localAtt = await window.getPdfAttachmentById(att.id);
+                if (localAtt && localAtt.dataUrl) sourceData = localAtt.dataUrl;
+              } catch (e) {}
+            }
+            if (sourceData && typeof window !== "undefined" && window.uploadPdfToSupabaseStorage) {
+              try {
+                const uploaded = await window.uploadPdfToSupabaseStorage(sourceData, drug.id, att.fileName);
+                if (uploaded) cloudUrl = uploaded;
+              } catch (upErr) {
+                console.warn("Không thể upload PDF lên cloud:", upErr);
               }
-            } catch (upErr) {
-              console.warn("Không thể upload PDF lên cloud:", upErr);
             }
           }
 
@@ -2022,15 +2028,21 @@ export async function handleSaveDrugForm(event) {
     }
 
     let cloudUrl = att.fileUrl || "";
-    // Nếu file mới tải từ máy tính và chưa có URL online, tự động upload lên Supabase Storage
-    if (!cloudUrl && att.dataUrl && typeof window !== "undefined" && window.uploadPdfToSupabaseStorage) {
-      try {
-        const uploaded = await window.uploadPdfToSupabaseStorage(att.dataUrl, id, att.fileName);
-        if (uploaded) {
-          cloudUrl = uploaded;
+    if (!cloudUrl) {
+      let sourceData = att.dataUrl;
+      if (!sourceData && typeof window !== "undefined" && window.getPdfAttachmentById) {
+        try {
+          const localAtt = await window.getPdfAttachmentById(att.id);
+          if (localAtt && localAtt.dataUrl) sourceData = localAtt.dataUrl;
+        } catch (e) {}
+      }
+      if (sourceData && typeof window !== "undefined" && window.uploadPdfToSupabaseStorage) {
+        try {
+          const uploaded = await window.uploadPdfToSupabaseStorage(sourceData, id, att.fileName);
+          if (uploaded) cloudUrl = uploaded;
+        } catch (upErr) {
+          console.warn("Không thể upload PDF lên cloud:", upErr);
         }
-      } catch (upErr) {
-        console.warn("Không thể upload PDF lên cloud:", upErr);
       }
     }
 

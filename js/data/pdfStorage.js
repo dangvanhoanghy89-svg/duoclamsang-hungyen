@@ -4,7 +4,7 @@
  * Tích hợp lưu trữ vĩnh viễn trong kho GitHub (assets/pdfs/) và bộ nhớ IndexedDB
  */
 
-import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v27_cloud_pdf_sync";
+import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v28_autoheal_pdf";
 
 const DB_NAME = "ClinicalRx_PDF_Store_v1";
 const DB_VERSION = 1;
@@ -245,4 +245,11 @@ export function formatFileSize(bytes) {
   const sizes = ["B", "KB", "MB", "GB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+}
+
+if (typeof window !== "undefined") {
+  window.getPdfAttachmentById = getPdfAttachmentById;
+  window.getPdfBlobUrl = getPdfBlobUrl;
+  window.downloadPdfAttachment = downloadPdfAttachment;
+  window.openPdfInNewWindow = openPdfInNewWindow;
 }
