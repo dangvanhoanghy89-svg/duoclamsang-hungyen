@@ -372,10 +372,17 @@ export function openDrugModal(drugId) {
             </p>
           </div>
           <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <button onclick="window.switchDrugTab('clinical')" 
+              title="Xem Mục 6: Lưu Ý Dược Lâm Sàng Chuyên Sâu & Giám Sát TDM"
+              class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs shadow-md transition-all cursor-pointer">
+              <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-950"></i>
+              <span class="hidden md:inline">Mục 6: Dược lâm sàng & TDM</span>
+              <span class="md:hidden">Mục 6</span>
+            </button>
             <button onclick="window.switchDrugTab('pdf')" 
               title="Xem Phần 7: Tài liệu chuyên môn đính kèm (PDF)"
               class="inline-flex items-center gap-1 bg-rose-600 hover:bg-rose-500 text-white font-black px-2.5 sm:px-3.5 py-1.5 rounded-xl text-[11px] sm:text-xs shadow-md transition-all cursor-pointer">
-              <i data-lucide="file-text" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
+              <i data-lucide="file-text" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white"></i>
               <span class="hidden sm:inline">Phần 7: File PDF</span>
               <span class="sm:hidden">PDF</span>
               <span>(${drug.attachments ? drug.attachments.length : 0})</span>
@@ -395,31 +402,46 @@ export function openDrugModal(drugId) {
         </div>
 
         <!-- Tab Controls (Đầy đủ chuẩn 7 Phần của Dược thư) -->
-        <div class="flex items-center border-b border-slate-200 bg-slate-50 px-3 sm:px-6 overflow-x-auto text-xs sm:text-sm font-semibold text-slate-600 gap-1 sm:gap-1.5 shrink-0 touch-scroll hide-scrollbar">
-          <button onclick="window.switchDrugTab('general')" id="tab-btn-general" class="drug-tab-btn active px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-teal-600 text-teal-700 whitespace-nowrap cursor-pointer">
-            1. Chỉ định & Liều
+        <div class="relative border-b border-slate-200 bg-slate-50 flex items-center shrink-0">
+          <button onclick="document.getElementById('drugModalTabBar')?.scrollBy({left: -180, behavior: 'smooth'})" 
+            title="Cuộn sang trái" 
+            class="hidden sm:flex items-center justify-center w-7 h-11 text-slate-400 hover:text-slate-700 bg-slate-100/80 hover:bg-slate-200 border-r border-slate-200 cursor-pointer transition-colors shrink-0">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i>
           </button>
-          <button onclick="window.switchDrugTab('renal')" id="tab-btn-renal" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
-            2. Chỉnh Thận/Gan
-          </button>
-          <button onclick="window.switchDrugTab('administration')" id="tab-btn-administration" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
-            3. Cách dùng & Pha truyền
-          </button>
-          <button onclick="window.switchDrugTab('safety')" id="tab-btn-safety" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer">
-            4. Cảnh báo & Thai kỳ
-          </button>
-          <button onclick="window.switchDrugTab('adr')" id="tab-btn-adr" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer font-bold text-rose-700 hover:text-rose-900">
-            5. Tác dụng phụ (ADR)
-          </button>
-          <button onclick="window.switchDrugTab('clinical')" id="tab-btn-clinical" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-slate-900 whitespace-nowrap cursor-pointer font-bold text-amber-700 hover:text-amber-900">
-            6. Dược lâm sàng
-          </button>
-          <button onclick="window.switchDrugTab('pdf')" id="tab-btn-pdf" class="drug-tab-btn px-2.5 sm:px-3.5 py-1.5 sm:py-2 my-1 rounded-xl whitespace-nowrap flex items-center gap-1 font-black text-white bg-rose-600 hover:bg-rose-700 shadow-md transition-all cursor-pointer ring-2 ring-rose-400/50">
-            <i data-lucide="file-text" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white"></i>
-            <span>7. PDF</span>
-            <span class="ml-1 px-1.5 py-0.2 bg-white text-rose-700 text-[10px] font-black rounded-full shadow-2xs">
-              ${drug.attachments ? drug.attachments.length : 0}
-            </span>
+
+          <div id="drugModalTabBar" class="flex items-center px-2 sm:px-4 overflow-x-auto text-xs sm:text-sm font-semibold text-slate-600 gap-1 sm:gap-1.5 flex-1 touch-scroll scroll-smooth hide-scrollbar">
+            <button onclick="window.switchDrugTab('general')" id="tab-btn-general" class="drug-tab-btn active px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-teal-600 text-teal-800 bg-teal-50/40 font-bold whitespace-nowrap cursor-pointer">
+              1. Chỉ định & Liều
+            </button>
+            <button onclick="window.switchDrugTab('renal')" id="tab-btn-renal" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap cursor-pointer">
+              2. Chỉnh Thận/Gan
+            </button>
+            <button onclick="window.switchDrugTab('administration')" id="tab-btn-administration" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap cursor-pointer">
+              3. Cách dùng & Pha truyền
+            </button>
+            <button onclick="window.switchDrugTab('safety')" id="tab-btn-safety" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap cursor-pointer">
+              4. Cảnh báo & Thai kỳ
+            </button>
+            <button onclick="window.switchDrugTab('adr')" id="tab-btn-adr" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-rose-950 whitespace-nowrap cursor-pointer font-bold text-rose-700">
+              5. Tác dụng phụ (ADR)
+            </button>
+            <button onclick="window.switchDrugTab('clinical')" id="tab-btn-clinical" class="drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-amber-950 whitespace-nowrap cursor-pointer font-bold text-amber-800 flex items-center gap-1">
+              <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-amber-600"></i>
+              <span>6. Dược lâm sàng & TDM</span>
+            </button>
+            <button onclick="window.switchDrugTab('pdf')" id="tab-btn-pdf" class="drug-tab-btn px-2.5 sm:px-3.5 py-1.5 sm:py-2 my-1 rounded-xl whitespace-nowrap flex items-center gap-1 font-black text-white bg-rose-600 hover:bg-rose-700 shadow-md transition-all cursor-pointer ring-2 ring-rose-400/50">
+              <i data-lucide="file-text" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white"></i>
+              <span>7. PDF</span>
+              <span class="ml-1 px-1.5 py-0.2 bg-white text-rose-700 text-[10px] font-black rounded-full shadow-2xs">
+                ${drug.attachments ? drug.attachments.length : 0}
+              </span>
+            </button>
+          </div>
+
+          <button onclick="document.getElementById('drugModalTabBar')?.scrollBy({left: 180, behavior: 'smooth'})" 
+            title="Cuộn sang phải (Xem Mục 6 & 7)" 
+            class="hidden sm:flex items-center justify-center w-7 h-11 text-slate-400 hover:text-slate-700 bg-slate-100/80 hover:bg-slate-200 border-l border-slate-200 cursor-pointer transition-colors shrink-0">
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
           </button>
         </div>
 
@@ -469,8 +491,38 @@ export function openDrugModal(drugId) {
               </div>
             </div>
 
+            <!-- BANNER NỔI BẬT MỤC 6: DƯỢC LÂM SÀNG & TDM NGAY TRONG TAB CHÍNH -->
+            <div class="mt-5 p-4 bg-gradient-to-r from-amber-50 via-teal-50/40 to-blue-50 border-2 border-amber-300/80 rounded-2xl flex items-center justify-between gap-3 flex-wrap shadow-xs">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-amber-600 text-white flex items-center justify-center font-bold shrink-0 shadow-2xs">
+                  <i data-lucide="stethoscope" class="w-5 h-5"></i>
+                </div>
+                <div class="min-w-0">
+                  <h5 class="font-black text-slate-900 text-sm flex items-center gap-1.5 flex-wrap">
+                    <span>Mục 6: Lưu Ý Dược Lâm Sàng Chuyên Sâu & Giám Sát TDM</span>
+                    <span class="px-2 py-0.2 bg-amber-500 text-slate-950 text-[10px] rounded-full font-bold">Quan trọng</span>
+                  </h5>
+                  <p class="text-xs text-slate-600 mt-0.5 line-clamp-2">
+                    ${drug.clinicalPearls ? escapeHtml(drug.clinicalPearls) : "Lưu ý sử dụng an toàn, tối ưu hóa điều trị và mục tiêu giám sát nồng độ thuốc trong máu."}
+                  </p>
+                  ${drug.tdmTarget ? `
+                    <div class="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold text-blue-800 bg-blue-100/70 px-2 py-0.5 rounded-md">
+                      <i data-lucide="gauge" class="w-3 h-3 text-blue-600"></i>
+                      <span>TDM: ${escapeHtml(drug.tdmTarget)}</span>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="window.switchDrugTab('clinical')" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold text-xs shadow-xs transition-colors cursor-pointer flex items-center gap-1 shrink-0">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                  <span>Xem Mục 6 (Dược lâm sàng & TDM)</span>
+                </button>
+              </div>
+            </div>
+
             <!-- BANNER NỔI BẬT PHẦN 7 NGAY TRONG TAB CHÍNH -->
-            <div class="mt-5 p-4 bg-gradient-to-r from-rose-50 via-white to-amber-50 border-2 border-rose-300 rounded-2xl flex items-center justify-between gap-3 flex-wrap shadow-xs">
+            <div class="mt-4 p-4 bg-gradient-to-r from-rose-50 via-white to-amber-50 border-2 border-rose-300 rounded-2xl flex items-center justify-between gap-3 flex-wrap shadow-xs">
               <div class="flex items-center gap-3 min-w-0">
                 <div class="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center font-bold shrink-0 shadow-2xs">
                   <i data-lucide="file-text" class="w-5 h-5"></i>
@@ -686,7 +738,7 @@ export function openDrugModal(drugId) {
               </div>
             `}
 
-            <div class="bg-indigo-50/60 border border-indigo-200 rounded-xl p-4 text-xs sm:text-sm">
+            <div class="bg-indigo-50/60 border border-indigo-200 rounded-xl p-4 text-xs sm:text-sm shadow-2xs">
               <h5 class="font-bold text-indigo-950 flex items-center gap-2 mb-1.5">
                 <i data-lucide="activity" class="w-4 h-4 text-indigo-700"></i>
                 6.3 Tương tác thuốc và Tương dung tiêm truyền
@@ -694,6 +746,17 @@ export function openDrugModal(drugId) {
               <p class="text-slate-700 leading-relaxed">
                 Để kiểm tra khả năng tương tác của <strong>${drug.name}</strong> với các thuốc khác trong phác đồ điều trị của bệnh nhân, vui lòng sử dụng công cụ <strong>Tương tác thuốc</strong> và <strong>Tương dung tiêm truyền IV</strong> trên thanh menu.
               </p>
+            </div>
+
+            <div class="flex items-center justify-between pt-4 border-t border-slate-200 text-xs text-slate-600">
+              <button onclick="window.switchDrugTab('adr')" class="inline-flex items-center gap-1 hover:text-rose-700 font-bold transition-colors cursor-pointer">
+                <i data-lucide="chevron-left" class="w-4 h-4 text-slate-400"></i>
+                <span>Xem Mục 5: Tác dụng phụ (ADR)</span>
+              </button>
+              <button onclick="window.switchDrugTab('pdf')" class="inline-flex items-center gap-1 hover:text-rose-700 font-bold text-rose-600 transition-colors cursor-pointer">
+                <span>Xem Phần 7: Tài liệu PDF</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-rose-500"></i>
+              </button>
             </div>
           </div>
 
@@ -850,6 +913,16 @@ export function openDrugModal(drugId) {
     </div>
   `;
 
+  const tabBar = document.getElementById("drugModalTabBar");
+  if (tabBar) {
+    tabBar.addEventListener("wheel", (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        tabBar.scrollLeft += e.deltaY;
+      }
+    }, { passive: false });
+  }
+
   if (window.lucide) window.lucide.createIcons();
 }
 
@@ -867,16 +940,34 @@ export function switchDrugTab(tabName) {
           btn.className = "drug-tab-btn px-3.5 py-2 my-1 rounded-xl whitespace-nowrap flex items-center gap-1.5 font-black text-white bg-rose-600 hover:bg-rose-700 shadow-sm transition-all cursor-pointer ring-2 ring-rose-400/50";
           content.classList.add("hidden");
         }
-      } else {
+      } else if (t === "clinical") {
         if (t === tabName) {
-          btn.classList.add("active", "border-teal-600", "text-teal-700");
-          btn.classList.remove("border-transparent", "text-slate-600");
+          btn.className = "drug-tab-btn active px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-amber-600 text-amber-950 bg-amber-50/70 font-black whitespace-nowrap cursor-pointer flex items-center gap-1";
           content.classList.remove("hidden");
         } else {
-          btn.classList.remove("active", "border-teal-600", "text-teal-700");
-          btn.classList.add("border-transparent", "text-slate-600");
+          btn.className = "drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-amber-950 font-bold text-amber-800 whitespace-nowrap cursor-pointer flex items-center gap-1";
           content.classList.add("hidden");
         }
+      } else if (t === "adr") {
+        if (t === tabName) {
+          btn.className = "drug-tab-btn active px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-rose-600 text-rose-900 bg-rose-50/60 font-black whitespace-nowrap cursor-pointer";
+          content.classList.remove("hidden");
+        } else {
+          btn.className = "drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent hover:text-rose-950 font-bold text-rose-700 whitespace-nowrap cursor-pointer";
+          content.classList.add("hidden");
+        }
+      } else {
+        if (t === tabName) {
+          btn.className = "drug-tab-btn active px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-teal-600 text-teal-800 bg-teal-50/40 font-bold whitespace-nowrap cursor-pointer";
+          content.classList.remove("hidden");
+        } else {
+          btn.className = "drug-tab-btn px-2.5 sm:px-3 py-2.5 sm:py-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 font-semibold whitespace-nowrap cursor-pointer";
+          content.classList.add("hidden");
+        }
+      }
+
+      if (t === tabName) {
+        btn.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
       }
     }
   });
