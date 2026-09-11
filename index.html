@@ -48,24 +48,19 @@
   <!-- ==================== TOP NAVIGATION HEADER ==================== -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
     <div class="w-full px-3 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-3">
+      <div class="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-3">
         
-        <!-- Brand Logo BVĐK Hưng Yên -->
-        <div class="flex items-center gap-2 sm:gap-3 cursor-pointer shrink min-w-0" onclick="window.navigateToSection('home')">
-          <div class="relative shrink-0">
-            <img src="./assets/logo-bvdk-hung-yen.png" alt="Logo Bệnh viện Đa khoa tỉnh Hưng Yên" 
-              class="w-10 h-10 sm:w-14 sm:h-14 object-contain rounded-full bg-white p-0.5 sm:p-1 shadow-md border-2 border-teal-600/30 ring-2 ring-teal-50 hover:scale-105 transition-transform" 
-              onerror="this.src='http://benhviendakhoatinhhungyen.vn/Upload/images/2024/logo%20png.png'">
-            <div class="absolute -bottom-0.5 -right-0.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-teal-600 text-white flex items-center justify-center text-[9px] sm:text-[10px] font-black shadow-sm ring-1.5 sm:ring-2 ring-white">
-              Rx
-            </div>
+        <!-- Brand Title BVĐK Hưng Yên (Đã bỏ logo bệnh viện theo yêu cầu để không che Trang chủ) -->
+        <div class="flex items-center gap-2 cursor-pointer shrink-0" onclick="window.navigateToSection('home')" title="Về Trang chủ">
+          <div class="w-8 h-8 rounded-xl bg-teal-700 text-white flex items-center justify-center font-black text-xs shadow-xs shrink-0">
+            Rx
           </div>
           <div class="min-w-0">
-            <div class="flex items-center gap-1.5 sm:gap-2">
-              <span class="text-xs sm:text-base lg:text-lg font-black tracking-tight text-slate-900 leading-tight truncate">BVĐK TỈNH HƯNG YÊN</span>
-              <span class="hidden xs:inline-block text-[9px] sm:text-[10px] uppercase tracking-wider font-extrabold bg-teal-100 text-teal-800 px-1.5 sm:px-2 py-0.5 rounded-md whitespace-nowrap shadow-2xs">Dược Lâm Sàng</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs sm:text-sm lg:text-base font-black tracking-tight text-slate-900 leading-tight">BVĐK TỈNH HƯNG YÊN</span>
+              <span class="hidden sm:inline-block text-[9px] uppercase tracking-wider font-extrabold bg-teal-100 text-teal-800 px-1.5 py-0.5 rounded-md shadow-2xs">Dược Lâm Sàng</span>
             </div>
-            <p class="text-[10px] sm:text-xs text-slate-500 font-semibold leading-none mt-0.5 sm:mt-1 truncate">Trung Tâm Thông Tin Thuốc · ClinicalRx</p>
+            <p class="text-[10px] text-slate-500 font-semibold leading-none mt-0.5 hidden sm:block">ClinicalRx · Thông Tin Thuốc</p>
           </div>
         </div>
 
@@ -1717,7 +1712,7 @@
   </script>
 
   <!-- Master Application Script (ES Module) -->
-  <script type="module" src="./js/app.js?v=20260911_v29_fix_font_encoding"></script>
+  <script type="module" src="./js/app.js?v=20260911_v30_header_clean"></script>
 
 </body>
 </html>
