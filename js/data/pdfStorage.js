@@ -1,8 +1,10 @@
 /**
- * PHARMAVITA / CLINICALRX - QUẢN LÝ TÀI LIỆU PDF ĐÍNH KÈM (INDEXEDDB STORAGE)
+ * PHARMAVITA / CLINICALRX - QUẢN LÝ TÀI LIỆU PDF ĐÍNH KÈM (INDEXEDDB & GITHUB REPO STORAGE)
  * Bệnh viện Đa khoa tỉnh Hưng Yên
- * Lưu trữ file PDF an toàn trong IndexedDB của trình duyệt mà không làm quá tải localStorage
+ * Tích hợp lưu trữ vĩnh viễn trong kho GitHub (assets/pdfs/) và bộ nhớ IndexedDB
  */
+
+import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v23_github_repo_pdfs";
 
 const DB_NAME = "ClinicalRx_PDF_Store_v1";
 const DB_VERSION = 1;
@@ -50,28 +52,53 @@ export async function savePdfAttachment(attachment) {
 }
 
 export async function getPdfAttachmentById(id) {
-  const db = await openPDFDatabase();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readonly");
-    const store = tx.objectStore(STORE_NAME);
-    const req = store.get(id);
+  // 1. Kiểm tra trong danh mục tài liệu lưu trữ cố định trên GitHub
+  const staticAtt = STATIC_PDF_CATALOG.find(a => a.id === id || a.fileName === id);
+  if (staticAtt) return staticAtt;
 
-    req.onsuccess = () => resolve(req.result || null);
-    req.onerror = () => reject(req.error);
-  });
+  // 2. Kiểm tra trong cơ sở dữ liệu IndexedDB của trình duyệt
+  try {
+    const db = await openPDFDatabase();
+    return new Promise((resolve) => {
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const store = tx.objectStore(STORE_NAME);
+      const req = store.get(id);
+
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => resolve(null);
+    });
+  } catch (err) {
+    console.error("Lỗi đọc PDF từ IndexedDB:", err);
+    return null;
+  }
 }
 
 export async function getPdfAttachmentsByDrugId(drugId) {
-  const db = await openPDFDatabase();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readonly");
-    const store = tx.objectStore(STORE_NAME);
-    const index = store.index("drugId");
-    const req = index.getAll(drugId);
+  const staticList = STATIC_PDF_CATALOG.filter(a => a.drugId === drugId);
+  try {
+    const db = await openPDFDatabase();
+    return new Promise((resolve) => {
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const store = tx.objectStore(STORE_NAME);
+      const index = store.index("drugId");
+      const req = index.getAll(drugId);
 
-    req.onsuccess = () => resolve(req.result || []);
-    req.onerror = () => reject(req.error);
-  });
+      req.onsuccess = () => {
+        const localList = req.result || [];
+        const combined = [...staticList];
+        const existingFileNames = new Set(staticList.map(s => (s.fileName || "").toLowerCase()));
+        localList.forEach(l => {
+          if (!existingFileNames.has((l.fileName || "").toLowerCase())) {
+            combined.push(l);
+          }
+        });
+        resolve(combined);
+      };
+      req.onerror = () => resolve(staticList);
+    });
+  } catch (err) {
+    return staticList;
+  }
 }
 
 export async function deletePdfAttachmentById(id) {
@@ -111,10 +138,12 @@ export async function getPdfBlobUrl(attachmentOrId) {
 
   if (!att) return null;
 
-  if (att.fileUrl && att.fileUrl.startsWith("http")) {
+  // File lưu trong GitHub (assets/pdfs/...) hoặc link URL online
+  if (att.fileUrl) {
     return att.fileUrl;
   }
 
+  // File lưu dạng Base64 trong IndexedDB
   if (att.dataUrl) {
     const blob = dataUrlToBlob(att.dataUrl);
     if (blob) {
@@ -132,7 +161,19 @@ export async function downloadPdfAttachment(pdfId, fallbackName = "document.pdf"
     return;
   }
 
-  let downloadUrl = att.fileUrl;
+  // Tải file trực tiếp từ GitHub repo
+  if (att.fileUrl) {
+    const a = document.createElement("a");
+    a.href = att.fileUrl;
+    a.download = att.fileName || fallbackName;
+    a.target = "_blank";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    return;
+  }
+
+  let downloadUrl = null;
   let isBlob = false;
 
   if (att.dataUrl) {
@@ -167,7 +208,8 @@ export async function openPdfInNewWindow(pdfId) {
     return;
   }
 
-  if (att.fileUrl && att.fileUrl.startsWith("http")) {
+  // Mở file trực tiếp từ đường dẫn GitHub repo hoặc URL online
+  if (att.fileUrl) {
     window.open(att.fileUrl, "_blank");
     return;
   }

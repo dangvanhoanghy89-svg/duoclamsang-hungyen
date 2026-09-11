@@ -4,6 +4,8 @@
  * Phân loại theo 14 nhóm giải phẫu - điều trị - hóa học (ATC Code A - V)
  */
 
+import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v23_github_repo_pdfs";
+
 export const ATC_CATEGORIES = [
   { code: "all", name: "Tất cả 14 nhóm ATC (Dược thư 2022)" },
   { code: "A", name: "A - Đường tiêu hóa & chuyển hóa (Alimentary & Metabolism)" },
@@ -38477,7 +38479,24 @@ export function getActiveDrugsDatabase() {
     if (Array.isArray(store.addedDrugs) && store.addedDrugs.length > 0) {
       list = [...store.addedDrugs, ...list];
     }
-    // 4. Tự động sắp xếp lại toàn bộ danh mục theo thứ tự ABC (A - Z)
+    // 4. Bổ sung các file PDF lưu trữ vĩnh viễn trên kho GitHub (assets/pdfs)
+    list.forEach(drug => {
+      const staticPdfs = STATIC_PDF_CATALOG.filter(p => p.drugId === drug.id);
+      if (staticPdfs.length > 0) {
+        if (!drug.attachments || !Array.isArray(drug.attachments) || drug.attachments.length === 0) {
+          drug.attachments = JSON.parse(JSON.stringify(staticPdfs));
+        } else {
+          const existingNames = new Set(drug.attachments.map(a => (a.fileName || a.title || "").toLowerCase()));
+          staticPdfs.forEach(sp => {
+            if (!existingNames.has((sp.fileName || "").toLowerCase()) && !existingNames.has((sp.title || "").toLowerCase())) {
+              drug.attachments.push(JSON.parse(JSON.stringify(sp)));
+            }
+          });
+        }
+      }
+    });
+
+    // 5. Tự động sắp xếp lại toàn bộ danh mục theo thứ tự ABC (A - Z)
     return sortDrugsAlphabetical(list);
   } catch (err) {
     console.error("Lỗi khi đọc danh mục thuốc tùy biến:", err);
