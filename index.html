@@ -112,8 +112,9 @@
             </button>
           </div>
 
-          <button onclick="window.openSupabaseAuthModal()" title="Cấu hình đồng bộ Supabase" class="hidden sm:inline-flex p-2 rounded-xl border border-slate-200 hover:border-teal-400 bg-white hover:bg-teal-50 text-slate-500 hover:text-teal-700 transition-all shadow-2xs shrink-0">
-            <i data-lucide="database" class="w-4 h-4 text-teal-600"></i>
+          <button onclick="window.openSupabaseAuthModal()" title="Cấu hình Cơ sở dữ liệu đám mây Supabase" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-teal-200 hover:border-teal-400 bg-teal-50 hover:bg-teal-100 text-teal-800 transition-all shadow-2xs shrink-0 text-xs font-bold cursor-pointer">
+            <i data-lucide="database" class="w-3.5 h-3.5 text-teal-600"></i>
+            <span class="hidden md:inline">Supabase Cloud</span>
           </button>
 
           <!-- Mobile Hamburger Button -->
@@ -140,6 +141,10 @@
       <button data-nav-target="iv" class="w-full text-left px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700">Tương hợp - Tương kỵ</button>
       <button data-nav-target="consultation" class="w-full text-left px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700">Hội chẩn lâm sàng</button>
       <button data-nav-target="adr" class="w-full text-left px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700">Báo cáo ADR</button>
+      <button onclick="window.openSupabaseAuthModal()" class="w-full text-left px-3 py-2 rounded-lg hover:bg-teal-50 hover:text-teal-700 flex items-center gap-2 text-teal-700 font-bold">
+        <i data-lucide="database" class="w-4 h-4"></i>
+        <span>Đồng bộ Supabase Cloud</span>
+      </button>
     </div>
   </header>
 
@@ -1712,7 +1717,7 @@
   </script>
 
   <!-- Master Application Script (ES Module) -->
-  <script type="module" src="./js/app.js?v=20260911_v24_fix_other_machines"></script>
+  <script type="module" src="./js/app.js?v=20260911_v25_supabase_sync"></script>
 
 </body>
 </html>

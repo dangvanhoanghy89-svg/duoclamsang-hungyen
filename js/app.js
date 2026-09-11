@@ -2,13 +2,14 @@
  * PHARMAVITA / CLINICALRX - CORE APPLICATION ENTRY POINT
  */
 
-import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260911_v24_fix_other_machines";
-import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260911_v24_fix_other_machines";
-import { initCalculators } from "./modules/calculators.js?v=20260911_v24_fix_other_machines";
-import { initConsultationModule } from "./modules/consultation.js?v=20260911_v24_fix_other_machines";
-import { initAdrModule } from "./modules/adrReporting.js?v=20260911_v24_fix_other_machines";
-import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260911_v24_fix_other_machines";
-import { initAuthModule } from "./modules/auth.js?v=20260911_v24_fix_other_machines";
+import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260911_v25_supabase_sync";
+import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260911_v25_supabase_sync";
+import { initCalculators } from "./modules/calculators.js?v=20260911_v25_supabase_sync";
+import { initConsultationModule } from "./modules/consultation.js?v=20260911_v25_supabase_sync";
+import { initAdrModule } from "./modules/adrReporting.js?v=20260911_v25_supabase_sync";
+import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260911_v25_supabase_sync";
+import { initAuthModule } from "./modules/auth.js?v=20260911_v25_supabase_sync";
+import { syncCustomDrugsFromCloud, openSupabaseModal } from "./modules/supabaseService.js?v=20260911_v25_supabase_sync";
 
 function initApp() {
   console.log("Khởi động ClinicalRx - Nền tảng Thông tin Thuốc & Dược Lâm Sàng (Mobile Optimized)");
@@ -23,6 +24,11 @@ function initApp() {
   initConsultationModule();
   initAdrModule();
   initIvCompatibilityModule();
+
+  // Tự động đồng bộ thuốc tùy biến từ Supabase Cloud trong nền
+  setTimeout(() => {
+    syncCustomDrugsFromCloud().catch(() => {});
+  }, 1000);
 
   // Khởi tạo icons Lucide
   if (window.lucide) {

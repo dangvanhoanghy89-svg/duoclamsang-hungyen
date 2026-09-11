@@ -150,3 +150,34 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
 after insert on auth.users
 for each row execute procedure public.handle_new_user();
+
+-- ==============================================================================
+-- 4. BẢNG DƯỢC THƯ NỘI VIỆN & THUỐC TÙY BIẾN ĐỒNG BỘ ĐÁM MÂY (CUSTOM DRUGS)
+-- ==============================================================================
+create table if not exists public.custom_drugs (
+  id text primary key,
+  data jsonb not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.custom_drugs enable row level security;
+
+drop policy if exists "Public read custom_drugs" on public.custom_drugs;
+create policy "Public read custom_drugs" on public.custom_drugs
+  for select using (true);
+
+drop policy if exists "Allow insert custom_drugs" on public.custom_drugs;
+create policy "Allow insert custom_drugs" on public.custom_drugs
+  for insert with check (true);
+
+drop policy if exists "Allow update custom_drugs" on public.custom_drugs;
+create policy "Allow update custom_drugs" on public.custom_drugs
+  for update using (true);
+
+drop policy if exists "Allow delete custom_drugs" on public.custom_drugs;
+create policy "Allow delete custom_drugs" on public.custom_drugs
+  for delete using (true);
+
+grant all on public.custom_drugs to anon, authenticated, service_role;
+

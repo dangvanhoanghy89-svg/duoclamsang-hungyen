@@ -27,3 +27,8 @@ export function saveSupabaseCredentials(url, key) {
   localStorage.setItem(CONFIG.STORAGE_KEYS.SUPABASE_URL, url.trim());
   localStorage.setItem(CONFIG.STORAGE_KEYS.SUPABASE_KEY, key.trim());
 }
+
+if (typeof window !== "undefined") {
+  window.__clinicalrx_config = { CONFIG, getSupabaseCredentials, saveSupabaseCredentials };
+}
+

@@ -38443,6 +38443,85 @@ export const DRUGS_DATABASE = [
       "Tư vấn phụ nữ trong độ tuổi sinh đẻ về nguy cơ dị tật thai nhi và bổ sung Acid Folic liều cao."
     ]
   }
+,
+  {
+    "id": "vitamin_3b",
+    "name": "Vitamin 3B",
+    "inn": "Vitamin B1 + B6 + B12",
+    "atcGroup": "V",
+    "atcCode": "V06DA",
+    "category": "Thuốc bổ sung vitamin nhóm B",
+    "brandNames": [
+      "3B-Medi",
+      "Cosyndo",
+      "Dubemin"
+    ],
+    "dosageForm": "Viên nén, viên nang, Dung dịch tiêm",
+    "indications": [
+      "Thiếu hụt vitamin nhóm B, đau đầu, và tình trạng suy nhược, đặc biệt ở trẻ em đang chậm lớn.",
+      "Điều trị các vấn đề liên quan đến hệ thần kinh, như đau dây thần kinh, viêm dây thần kinh ngoại biên, viêm dây thần kinh mắt, viêm do tiểu đường và rượu, cùng với các triệu chứng như dị cảm, hội chứng vai cánh tay, suy nhược thần kinh, đau thần kinh tọa và co giật do kích thích quá mức hệ thần kinh trung ương.",
+      "Hỗ trợ điều trị bệnh Zona.",
+      "Giúp giảm buồn nôn và nôn trong thai kỳ.",
+      "Điều trị thiếu máu do thiếu vitamin B6 và B12.",
+      "Hỗ trợ hồi phục sức khỏe sau khi ốm, trong thời gian làm việc quá sức, hoặc cho người cao tuổi."
+    ],
+    "contraindications": [
+      "Phản ứng dị ứng với vitamin B1, B6 hoặc bất kỳ thành phần nào khác trong thuốc.",
+      "Bệnh u ác tính.",
+      "Tiền sử dị ứng, như hen suyễn hoặc eczema."
+    ],
+    "standardDosage": {
+      "adult": "1 viên mỗi lần, 2 lần mỗi ngày (hoặc theo chỉ định bác sĩ điều trị).",
+      "pediatric": "Đối với trẻ em trên 12 tuổi: 1 viên mỗi ngày.",
+      "elderly": "1 viên mỗi lần, 2 lần mỗi ngày."
+    },
+    "renalAdjustment": [
+      {
+        "crcl": "Bình thường",
+        "dose": "Không cần chỉnh liều"
+      }
+    ],
+    "hepaticAdjustment": "Theo dõi men gan khi dùng liều cao kéo dài",
+    "administration": "Đường uống sau bữa ăn, hoặc tiêm bắp sâu theo y lệnh và quy trình điều dưỡng.",
+    "blackBoxWarning": "",
+    "adr": {
+      "common": "Rối loạn tiêu hóa nhẹ, buồn nôn, nước tiểu màu vàng sẫm",
+      "serious": "Sốc phản vệ (khi tiêm), dị ứng nặng, hội chứng thần kinh cảm giác ngoại biên (khi dùng liều rất cao B6 kéo dài)"
+    },
+    "pregnancyCategory": "C",
+    "lactation": "Thận trọng, theo dõi sát trẻ bú mẹ.",
+    "tdmTarget": "Theo dõi lâm sàng",
+    "clinicalPearls": "Thuốc được cập nhật bởi Quản trị viên Khoa Dược BVĐK tỉnh Hưng Yên.",
+    "attachments": [
+      {
+        "id": "pdf_1789110076064_1v1yvt",
+        "drugId": "vitamin_3b",
+        "title": "3B (Cosyndo B)",
+        "fileName": "3B (Cosyndo B).pdf",
+        "fileUrl": "./assets/pdfs/3B (Cosyndo B).pdf",
+        "fileSize": 974226,
+        "fileType": "application/pdf"
+      },
+      {
+        "id": "pdf_1789110081648_731n2f",
+        "drugId": "vitamin_3b",
+        "title": "3B (Dubemin inj 3ml)",
+        "fileName": "3B (Dubemin inj 3ml).pdf",
+        "fileUrl": "./assets/pdfs/3B (Dubemin inj 3ml).pdf",
+        "fileSize": 570315,
+        "fileType": "application/pdf"
+      },
+      {
+        "id": "pdf_1789110087805_6ixor1",
+        "drugId": "vitamin_3b",
+        "title": "3B Medi",
+        "fileName": "3B-Medi.pdf",
+        "fileUrl": "./assets/pdfs/3B-Medi.pdf",
+        "fileSize": 612710,
+        "fileType": "application/pdf"
+      }
+    ]
+  }
 ];
 
 
@@ -38538,6 +38617,29 @@ export function saveOrUpdateDrug(drugData) {
     }
 
     localStorage.setItem(CUSTOM_DRUGS_STORAGE_KEY, JSON.stringify(store));
+
+    // Đồng bộ tự động lên Supabase Cloud Database nếu có kết nối
+    if (window.supabase) {
+      try {
+        const { getSupabaseCredentials } = window.__clinicalrx_config || {};
+        if (getSupabaseCredentials) {
+          const { url, key } = getSupabaseCredentials();
+          if (url && key) {
+            const client = window.supabase.createClient(url, key);
+            client.from("custom_drugs").upsert({
+              id: drugData.id,
+              data: drugData,
+              updated_at: new Date().toISOString()
+            }).then(({ error }) => {
+              if (error) console.warn("Supabase sync warning:", error);
+              else console.log("Đã đồng bộ thuốc lên Supabase Cloud:", drugData.name);
+            });
+          }
+        }
+      } catch (e) {
+        console.warn("Lỗi gửi Supabase:", e);
+      }
+    }
     return { success: true, drug: drugData };
   } catch (err) {
     console.error("Lỗi khi lưu thuốc:", err);
@@ -38561,89 +38663,27 @@ export function deleteDrugById(drugId) {
     }
     // Xóa khỏi modified nếu có
     if (store.modified && store.modified[drugId]) {
-      delete store.modified[drugId,
-  {
-    "id": "vitamin_3b",
-    "name": "Vitamin 3B",
-    "inn": "Vitamin B1 + B6 + B12",
-    "atcGroup": "V",
-    "atcCode": "V06DA",
-    "category": "Thuốc bổ sung vitamin nhóm B",
-    "brandNames": [
-      "3B-Medi",
-      "Cosyndo",
-      "Dubemin"
-    ],
-    "dosageForm": "Viên nén, viên nang, Dung dịch tiêm",
-    "indications": [
-      "Thiếu hụt vitamin nhóm B, đau đầu, và tình trạng suy nhược, đặc biệt ở trẻ em đang chậm lớn.",
-      "Điều trị các vấn đề liên quan đến hệ thần kinh, như đau dây thần kinh, viêm dây thần kinh ngoại biên, viêm dây thần kinh mắt, viêm do tiểu đường và rượu, cùng với các triệu chứng như dị cảm, hội chứng vai cánh tay, suy nhược thần kinh, đau thần kinh tọa và co giật do kích thích quá mức hệ thần kinh trung ương.",
-      "Hỗ trợ điều trị bệnh Zona.",
-      "Giúp giảm buồn nôn và nôn trong thai kỳ.",
-      "Điều trị thiếu máu do thiếu vitamin B6 và B12.",
-      "Hỗ trợ hồi phục sức khỏe sau khi ốm, trong thời gian làm việc quá sức, hoặc cho người cao tuổi."
-    ],
-    "contraindications": [
-      "Phản ứng dị ứng với vitamin B1, B6 hoặc bất kỳ thành phần nào khác trong thuốc.",
-      "Bệnh u ác tính.",
-      "Tiền sử dị ứng, như hen suyễn hoặc eczema."
-    ],
-    "standardDosage": {
-      "adult": "1 viên mỗi lần, 2 lần mỗi ngày (hoặc theo chỉ định bác sĩ điều trị).",
-      "pediatric": "Đối với trẻ em trên 12 tuổi: 1 viên mỗi ngày.",
-      "elderly": "1 viên mỗi lần, 2 lần mỗi ngày."
-    },
-    "renalAdjustment": [
-      {
-        "crcl": "Bình thường",
-        "dose": "Không cần chỉnh liều"
-      }
-    ],
-    "hepaticAdjustment": "Theo dõi men gan khi dùng liều cao kéo dài",
-    "administration": "Đường uống sau bữa ăn, hoặc tiêm bắp sâu theo y lệnh và quy trình điều dưỡng.",
-    "blackBoxWarning": "",
-    "adr": {
-      "common": "Rối loạn tiêu hóa nhẹ, buồn nôn, nước tiểu màu vàng sẫm",
-      "serious": "Sốc phản vệ (khi tiêm), dị ứng nặng, hội chứng thần kinh cảm giác ngoại biên (khi dùng liều rất cao B6 kéo dài)"
-    },
-    "pregnancyCategory": "C",
-    "lactation": "Thận trọng, theo dõi sát trẻ bú mẹ.",
-    "tdmTarget": "Theo dõi lâm sàng",
-    "clinicalPearls": "Thuốc được cập nhật bởi Quản trị viên Khoa Dược BVĐK tỉnh Hưng Yên.",
-    "attachments": [
-      {
-        "id": "pdf_1789110076064_1v1yvt",
-        "drugId": "vitamin_3b",
-        "title": "3B (Cosyndo B)",
-        "fileName": "3B (Cosyndo B).pdf",
-        "fileUrl": "./assets/pdfs/3B (Cosyndo B).pdf",
-        "fileSize": 974226,
-        "fileType": "application/pdf"
-      },
-      {
-        "id": "pdf_1789110081648_731n2f",
-        "drugId": "vitamin_3b",
-        "title": "3B (Dubemin inj 3ml)",
-        "fileName": "3B (Dubemin inj 3ml).pdf",
-        "fileUrl": "./assets/pdfs/3B (Dubemin inj 3ml).pdf",
-        "fileSize": 570315,
-        "fileType": "application/pdf"
-      },
-      {
-        "id": "pdf_1789110087805_6ixor1",
-        "drugId": "vitamin_3b",
-        "title": "3B Medi",
-        "fileName": "3B-Medi.pdf",
-        "fileUrl": "./assets/pdfs/3B-Medi.pdf",
-        "fileSize": 612710,
-        "fileType": "application/pdf"
-      }
-    ]
-  }
-];
+      delete store.modified[drugId];
     }
 
     localStorage.setItem(CUSTOM_DRUGS_STORAGE_KEY, JSON.stringify(store));
+
+    // Đồng bộ xóa trên Supabase Cloud
+    if (window.supabase) {
+      try {
+        const { getSupabaseCredentials } = window.__clinicalrx_config || {};
+        if (getSupabaseCredentials) {
+          const { url, key } = getSupabaseCredentials();
+          if (url && key) {
+            const client = window.supabase.createClient(url, key);
+            client.from("custom_drugs").delete().eq("id", drugId).then(() => {
+              console.log("Đã xóa thuốc trên Supabase Cloud:", drugId);
+            });
+          }
+        }
+      } catch (err) {}
+    }
+
     return { success: true };
   } catch (err) {
     console.error("Lỗi khi xóa thuốc:", err);
@@ -38658,4 +38698,52 @@ export function resetCustomDrugsDatabase() {
   } catch (err) {
     return { success: false, error: err.message };
   }
+}
+
+// ============================================================================
+// ĐỒNG BỘ CƠ SỞ DỮ LIỆU ĐÁM MÂY SUPABASE (CLOUD SYNC)
+// ============================================================================
+export async function syncCustomDrugsFromSupabase() {
+  if (!window.supabase) return false;
+  try {
+    const { getSupabaseCredentials } = window.__clinicalrx_config || {};
+    if (!getSupabaseCredentials) return false;
+    const { url, key } = getSupabaseCredentials();
+    if (!url || !key) return false;
+
+    const client = window.supabase.createClient(url, key);
+    const { data, error } = await client.from("custom_drugs").select("*");
+    if (error) {
+      console.warn("Supabase custom_drugs fetch warning:", error.message);
+      return false;
+    }
+
+    if (Array.isArray(data) && data.length > 0) {
+      const raw = localStorage.getItem(CUSTOM_DRUGS_STORAGE_KEY);
+      const store = raw ? JSON.parse(raw) : { deletedIds: [], modified: {}, addedDrugs: [] };
+      if (!store.addedDrugs) store.addedDrugs = [];
+
+      let hasChanges = false;
+      data.forEach(row => {
+        const drug = row.data || row;
+        if (!drug || !drug.id) return;
+        const idx = store.addedDrugs.findIndex(d => d.id === drug.id);
+        if (idx >= 0) {
+          store.addedDrugs[idx] = drug;
+        } else {
+          store.addedDrugs.push(drug);
+        }
+        hasChanges = true;
+      });
+
+      if (hasChanges) {
+        localStorage.setItem(CUSTOM_DRUGS_STORAGE_KEY, JSON.stringify(store));
+        console.log(`Đã đồng bộ thành công ${data.length} thuốc từ Supabase Cloud!`);
+        return true;
+      }
+    }
+  } catch (err) {
+    console.warn("Lỗi khi đồng bộ Supabase Cloud:", err);
+  }
+  return false;
 }
