@@ -4,7 +4,7 @@
  * Phân loại theo 14 nhóm giải phẫu - điều trị - hóa học (ATC Code A - V)
  */
 
-import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v30_header_clean";
+import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v31_acetyl_dl_leucine";
 
 export const ATC_CATEGORIES = [
   { code: "all", name: "Tất cả 14 nhóm ATC (Dược thư 2022)" },
@@ -38442,8 +38442,7 @@ export const DRUGS_DATABASE = [
       "Tuyệt đối không dừng thuốc đột ngột vì có thể kích hoạt trạng thái động kinh liên tục nguy hiểm tính mạng.",
       "Tư vấn phụ nữ trong độ tuổi sinh đẻ về nguy cơ dị tật thai nhi và bổ sung Acid Folic liều cao."
     ]
-  }
-,
+  },
   {
     "id": "vitamin_3b",
     "name": "Vitamin 3B",
@@ -38521,6 +38520,54 @@ export const DRUGS_DATABASE = [
         "fileType": "application/pdf"
       }
     ]
+  },
+  {
+    "id": "acetyl_dl_leucine",
+    "name": "Acetyl-DL-Leucin (Tanganil)",
+    "inn": "Acetyl-DL-Leucine",
+    "atcGroup": "N",
+    "atcCode": "N07CA04",
+    "category": "Thuốc điều trị chóng mặt (Antivertigo preparations)",
+    "brandNames": [
+      "Tanganil 500mg",
+      "Tanganil 500mg/5ml",
+      "Tangana",
+      "Nac-Ctra",
+      "Agitangan"
+    ],
+    "dosageForm": "Viên nén 500mg, Dung dịch tiêm tĩnh mạch 500mg/5ml",
+    "indications": [
+      "Điều trị triệu chứng các cơn chóng mặt bất kỳ nguồn gốc: Chóng mặt vị trí kịch phát lành tính (BPPV), hội chứng Meniere, viêm dây thần kinh tiền đình.",
+      "Chóng mặt sau chấn thương sọ não, chóng mặt sau phẫu thuật, chóng mặt do phản xạ hoặc do nguyên nhân chuyển hóa, ngộ độc.",
+      "Chóng mặt phối hợp trong tăng huyết áp, xơ vữa động mạch, suy tuần hoàn não."
+    ],
+    "contraindications": [
+      "Quá mẫn cảm với Acetyl-DL-leucine hoặc bất kỳ thành phần tá dược nào của thuốc.",
+      "Bệnh nhân dị ứng với lúa mì (đối với dạng viên nén có chứa tá dược tinh bột lúa mì; riêng người mắc bệnh Celiac vẫn có thể dùng nếu lượng gluten nằm trong giới hạn an toàn)."
+    ],
+    "standardDosage": {
+      "adult": "Đường uống: 1.5 - 2g (3 - 4 viên 500mg)/ngày chia làm 2 - 3 lần (sáng và tối hoặc sáng, trưa, tối), uống vào các bữa ăn. Thời gian điều trị thông thường từ 10 ngày đến vài tuần tùy theo đáp ứng lâm sàng. Đường tiêm tĩnh mạch: 1g (2 ống 500mg/5ml)/ngày tiêm tĩnh mạch chậm (khi chóng mặt dữ dội hoặc nôn nhiều không uống được); có thể tăng lên đến 2g (4 ống)/ngày nếu cần thiết.",
+      "pediatric": "Chưa xác định được hiệu lực và độ an toàn ở trẻ em; không khuyến cáo sử dụng.",
+      "elderly": "Dùng liều người lớn thông thường. Chú ý phòng ngừa té ngã khi có cơn chóng mặt cấp."
+    },
+    "renalAdjustment": [
+      {
+        "crcl": "Mọi mức độ",
+        "dose": "Chưa có khuyến cáo điều chỉnh liều cụ thể; sử dụng thận trọng và theo dõi lâm sàng."
+      }
+    ],
+    "hepaticAdjustment": "Chưa có dữ liệu nghiên cứu đầy đủ trên bệnh nhân suy giảm chức năng gan; thận trọng khi dùng ở bệnh nhân suy gan nặng.",
+    "administration": "Đường uống: Uống nguyên viên với một ly nước vào các bữa ăn chính. Đường tiêm: CHỈ DÙNG TIÊM TĨNH MẠCH CHẬM (tiêm trong khoảng 2 - 3 phút). Tuyệt đối KHÔNG tiêm bắp vì nguy cơ gây kích ứng và hoại tử mô tại chỗ.",
+    "blackBoxWarning": "",
+    "adr": {
+      "common": "Rất hiếm gặp (< 1/10.000): Rối loạn tiêu hóa nhẹ (buồn nôn, khó chịu thượng vị).",
+      "serious": "Phản ứng dị ứng hoặc phản vệ: Ban da, mày đay, ngứa, hồng ban đa dạng; sốc phản vệ hoặc tụt huyết áp cấp tính (đặc biệt khi tiêm tĩnh mạch quá nhanh)."
+    },
+    "pregnancyCategory": "C",
+    "lactation": "Tránh dùng trong thời kỳ mang thai và cho con bú do dữ liệu an toàn lâm sàng trên người mẹ và trẻ sơ sinh còn hạn chế.",
+    "tdmTarget": "Đánh giá sự cải thiện của triệu chứng chóng mặt, cảm giác thăng bằng, rung giật nhãn cầu (nystagmus) và theo dõi phản ứng quá mẫn khi tiêm truyền.",
+    "clinicalPearls": "1. Cơ chế tác dụng: Acetyl-DL-leucine là dẫn xuất acid amin có tác dụng tái phân cực màng tế bào thần kinh tiền đình và tế bào Purkinje ở tiểu não đang bị khử cực, điều hòa hoạt động của thụ thể glutamate/glycine, giúp dập tắt phóng điện bất thường mà không gây an thần buồn ngủ như nhóm kháng histamin H1 (cinnarizin, flunarizin).\n2. Cảnh báo quan trọng: Dạng tiêm bắt buộc phải tiêm tĩnh mạch thật chậm (2-3 phút); tuyệt đối không tiêm bắp.\n3. Nếu triệu chứng chóng mặt không cải thiện sau vài ngày điều trị, cần thăm khám lại chuyên khoa thần kinh để loại trừ các nguyên nhân tổn thương hệ thần kinh trung ương (nhồi máu tiểu não, u góc cầu tiểu não).",
+    "attachments": []
   }
 ];
 

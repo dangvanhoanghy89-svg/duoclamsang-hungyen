@@ -2,14 +2,14 @@
  * PHARMAVITA / CLINICALRX - CORE APPLICATION ENTRY POINT
  */
 
-import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260911_v30_header_clean";
-import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260911_v30_header_clean";
-import { initCalculators } from "./modules/calculators.js?v=20260911_v30_header_clean";
-import { initConsultationModule } from "./modules/consultation.js?v=20260911_v30_header_clean";
-import { initAdrModule } from "./modules/adrReporting.js?v=20260911_v30_header_clean";
-import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260911_v30_header_clean";
-import { initAuthModule } from "./modules/auth.js?v=20260911_v30_header_clean";
-import { syncCustomDrugsFromCloud, openSupabaseModal } from "./modules/supabaseService.js?v=20260911_v30_header_clean";
+import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260911_v31_acetyl_dl_leucine";
+import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260911_v31_acetyl_dl_leucine";
+import { initCalculators } from "./modules/calculators.js?v=20260911_v31_acetyl_dl_leucine";
+import { initConsultationModule } from "./modules/consultation.js?v=20260911_v31_acetyl_dl_leucine";
+import { initAdrModule } from "./modules/adrReporting.js?v=20260911_v31_acetyl_dl_leucine";
+import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260911_v31_acetyl_dl_leucine";
+import { initAuthModule } from "./modules/auth.js?v=20260911_v31_acetyl_dl_leucine";
+import { syncCustomDrugsFromCloud, openSupabaseModal } from "./modules/supabaseService.js?v=20260911_v31_acetyl_dl_leucine";
 
 function initApp() {
   console.log("Khởi động ClinicalRx - Nền tảng Thông tin Thuốc & Dược Lâm Sàng (Mobile Optimized)");
