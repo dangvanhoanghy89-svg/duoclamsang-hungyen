@@ -54,9 +54,18 @@
     "fileType": "application/pdf"
   },
   {
+    "id": "pdf_1789113610362_hy3p38",
+    "drugId": "acetylcysteine_sachet",
+    "title": "Acetyl cystein (BFS Depara 200mg)",
+    "fileName": "Acetyl cystein (BFS-Depara 200mg).pdf",
+    "fileUrl": "./assets/pdfs/Acetyl cystein (BFS-Depara 200mg).pdf",
+    "fileSize": 1320851,
+    "fileType": "application/pdf"
+  },
+  {
     "id": "pdf_1788924993207_po67ui",
     "drugId": "amlodipine",
-    "title": "Apitim 10mg   Amlodipin",
+    "title": "Apitim 10mg - Amlodipin",
     "fileName": "Apitim 10mg - Amlodipin.pdf",
     "fileUrl": "./assets/pdfs/Apitim 10mg - Amlodipin.pdf",
     "fileSize": 2307022,
@@ -65,9 +74,9 @@
   {
     "id": "pdf_1788937992183_zwf0q2",
     "drugId": "dexketoprofen",
-    "title": "Sympal (Dexketoprpfen) 25mg ",
-    "fileName": "Sympal (Dexketoprpfen) 25mg .pdf",
-    "fileUrl": "./assets/pdfs/Sympal (Dexketoprpfen) 25mg .pdf",
+    "title": "Sympal (Dexketoprofen) 25mg",
+    "fileName": "Sympal (Dexketoprofen) 25mg.pdf",
+    "fileUrl": "./assets/pdfs/Sympal (Dexketoprofen) 25mg.pdf",
     "fileSize": 1966642,
     "fileType": "application/pdf"
   }

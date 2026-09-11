@@ -60,9 +60,18 @@ export const STATIC_PDF_CATALOG = [
     "fileType": "application/pdf"
   },
   {
+    "id": "pdf_1789113610362_hy3p38",
+    "drugId": "acetylcysteine_sachet",
+    "title": "Acetyl cystein (BFS Depara 200mg)",
+    "fileName": "Acetyl cystein (BFS-Depara 200mg).pdf",
+    "fileUrl": "./assets/pdfs/Acetyl cystein (BFS-Depara 200mg).pdf",
+    "fileSize": 1320851,
+    "fileType": "application/pdf"
+  },
+  {
     "id": "pdf_1788924993207_po67ui",
     "drugId": "amlodipine",
-    "title": "Apitim 10mg   Amlodipin",
+    "title": "Apitim 10mg - Amlodipin",
     "fileName": "Apitim 10mg - Amlodipin.pdf",
     "fileUrl": "./assets/pdfs/Apitim 10mg - Amlodipin.pdf",
     "fileSize": 2307022,

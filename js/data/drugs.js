@@ -4,7 +4,7 @@
  * Phân loại theo 14 nhóm giải phẫu - điều trị - hóa học (ATC Code A - V)
  */
 
-import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v23_github_repo_pdfs";
+import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v24_fix_other_machines";
 
 export const ATC_CATEGORIES = [
   { code: "all", name: "Tất cả 14 nhóm ATC (Dược thư 2022)" },
@@ -38464,22 +38464,30 @@ export function getActiveDrugsDatabase() {
   try {
     const raw = localStorage.getItem(CUSTOM_DRUGS_STORAGE_KEY);
     let list = [...DRUGS_DATABASE];
-    if (!raw) return sortDrugsAlphabetical(list);
 
-    const store = JSON.parse(raw);
-    // 1. Lọc bỏ các thuốc bị Quản trị viên xóa
-    if (Array.isArray(store.deletedIds) && store.deletedIds.length > 0) {
-      list = list.filter(d => !store.deletedIds.includes(d.id));
+    if (raw) {
+      try {
+        const store = JSON.parse(raw);
+        // 1. Lọc bỏ các thuốc bị Quản trị viên xóa
+        if (Array.isArray(store.deletedIds) && store.deletedIds.length > 0) {
+          list = list.filter(d => !store.deletedIds.includes(d.id));
+        }
+        // 2. Cập nhật các thuốc đã được chỉnh sửa
+        if (store.modified && typeof store.modified === "object") {
+          list = list.map(d => store.modified[d.id] ? { ...d, ...store.modified[d.id] } : d);
+        }
+        // 3. Bổ sung các thuốc mới thêm
+        if (Array.isArray(store.addedDrugs) && store.addedDrugs.length > 0) {
+          // Lọc trùng ID nếu đã có trong DRUGS_DATABASE
+          const addedFiltered = store.addedDrugs.filter(ad => !list.some(d => d.id === ad.id));
+          list = [...addedFiltered, ...list];
+        }
+      } catch (parseErr) {
+        console.warn("Lỗi khi giải mã localStorage custom drugs:", parseErr);
+      }
     }
-    // 2. Cập nhật các thuốc đã được chỉnh sửa
-    if (store.modified && typeof store.modified === "object") {
-      list = list.map(d => store.modified[d.id] ? { ...d, ...store.modified[d.id] } : d);
-    }
-    // 3. Bổ sung các thuốc mới thêm
-    if (Array.isArray(store.addedDrugs) && store.addedDrugs.length > 0) {
-      list = [...store.addedDrugs, ...list];
-    }
-    // 4. Bổ sung các file PDF lưu trữ vĩnh viễn trên kho GitHub (assets/pdfs)
+
+    // 4. Bổ sung các file PDF lưu trữ vĩnh viễn trên kho GitHub (assets/pdfs) CHO MỌI THIẾT BỊ
     list.forEach(drug => {
       const staticPdfs = STATIC_PDF_CATALOG.filter(p => p.drugId === drug.id);
       if (staticPdfs.length > 0) {
@@ -38553,7 +38561,86 @@ export function deleteDrugById(drugId) {
     }
     // Xóa khỏi modified nếu có
     if (store.modified && store.modified[drugId]) {
-      delete store.modified[drugId];
+      delete store.modified[drugId,
+  {
+    "id": "vitamin_3b",
+    "name": "Vitamin 3B",
+    "inn": "Vitamin B1 + B6 + B12",
+    "atcGroup": "V",
+    "atcCode": "V06DA",
+    "category": "Thuốc bổ sung vitamin nhóm B",
+    "brandNames": [
+      "3B-Medi",
+      "Cosyndo",
+      "Dubemin"
+    ],
+    "dosageForm": "Viên nén, viên nang, Dung dịch tiêm",
+    "indications": [
+      "Thiếu hụt vitamin nhóm B, đau đầu, và tình trạng suy nhược, đặc biệt ở trẻ em đang chậm lớn.",
+      "Điều trị các vấn đề liên quan đến hệ thần kinh, như đau dây thần kinh, viêm dây thần kinh ngoại biên, viêm dây thần kinh mắt, viêm do tiểu đường và rượu, cùng với các triệu chứng như dị cảm, hội chứng vai cánh tay, suy nhược thần kinh, đau thần kinh tọa và co giật do kích thích quá mức hệ thần kinh trung ương.",
+      "Hỗ trợ điều trị bệnh Zona.",
+      "Giúp giảm buồn nôn và nôn trong thai kỳ.",
+      "Điều trị thiếu máu do thiếu vitamin B6 và B12.",
+      "Hỗ trợ hồi phục sức khỏe sau khi ốm, trong thời gian làm việc quá sức, hoặc cho người cao tuổi."
+    ],
+    "contraindications": [
+      "Phản ứng dị ứng với vitamin B1, B6 hoặc bất kỳ thành phần nào khác trong thuốc.",
+      "Bệnh u ác tính.",
+      "Tiền sử dị ứng, như hen suyễn hoặc eczema."
+    ],
+    "standardDosage": {
+      "adult": "1 viên mỗi lần, 2 lần mỗi ngày (hoặc theo chỉ định bác sĩ điều trị).",
+      "pediatric": "Đối với trẻ em trên 12 tuổi: 1 viên mỗi ngày.",
+      "elderly": "1 viên mỗi lần, 2 lần mỗi ngày."
+    },
+    "renalAdjustment": [
+      {
+        "crcl": "Bình thường",
+        "dose": "Không cần chỉnh liều"
+      }
+    ],
+    "hepaticAdjustment": "Theo dõi men gan khi dùng liều cao kéo dài",
+    "administration": "Đường uống sau bữa ăn, hoặc tiêm bắp sâu theo y lệnh và quy trình điều dưỡng.",
+    "blackBoxWarning": "",
+    "adr": {
+      "common": "Rối loạn tiêu hóa nhẹ, buồn nôn, nước tiểu màu vàng sẫm",
+      "serious": "Sốc phản vệ (khi tiêm), dị ứng nặng, hội chứng thần kinh cảm giác ngoại biên (khi dùng liều rất cao B6 kéo dài)"
+    },
+    "pregnancyCategory": "C",
+    "lactation": "Thận trọng, theo dõi sát trẻ bú mẹ.",
+    "tdmTarget": "Theo dõi lâm sàng",
+    "clinicalPearls": "Thuốc được cập nhật bởi Quản trị viên Khoa Dược BVĐK tỉnh Hưng Yên.",
+    "attachments": [
+      {
+        "id": "pdf_1789110076064_1v1yvt",
+        "drugId": "vitamin_3b",
+        "title": "3B (Cosyndo B)",
+        "fileName": "3B (Cosyndo B).pdf",
+        "fileUrl": "./assets/pdfs/3B (Cosyndo B).pdf",
+        "fileSize": 974226,
+        "fileType": "application/pdf"
+      },
+      {
+        "id": "pdf_1789110081648_731n2f",
+        "drugId": "vitamin_3b",
+        "title": "3B (Dubemin inj 3ml)",
+        "fileName": "3B (Dubemin inj 3ml).pdf",
+        "fileUrl": "./assets/pdfs/3B (Dubemin inj 3ml).pdf",
+        "fileSize": 570315,
+        "fileType": "application/pdf"
+      },
+      {
+        "id": "pdf_1789110087805_6ixor1",
+        "drugId": "vitamin_3b",
+        "title": "3B Medi",
+        "fileName": "3B-Medi.pdf",
+        "fileUrl": "./assets/pdfs/3B-Medi.pdf",
+        "fileSize": 612710,
+        "fileType": "application/pdf"
+      }
+    ]
+  }
+];
     }
 
     localStorage.setItem(CUSTOM_DRUGS_STORAGE_KEY, JSON.stringify(store));
