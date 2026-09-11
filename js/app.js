@@ -2,14 +2,14 @@
  * PHARMAVITA / CLINICALRX - CORE APPLICATION ENTRY POINT
  */
 
-import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260911_v25_supabase_sync";
-import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260911_v25_supabase_sync";
-import { initCalculators } from "./modules/calculators.js?v=20260911_v25_supabase_sync";
-import { initConsultationModule } from "./modules/consultation.js?v=20260911_v25_supabase_sync";
-import { initAdrModule } from "./modules/adrReporting.js?v=20260911_v25_supabase_sync";
-import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260911_v25_supabase_sync";
-import { initAuthModule } from "./modules/auth.js?v=20260911_v25_supabase_sync";
-import { syncCustomDrugsFromCloud, openSupabaseModal } from "./modules/supabaseService.js?v=20260911_v25_supabase_sync";
+import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260911_v26_tranexamic_pdf";
+import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260911_v26_tranexamic_pdf";
+import { initCalculators } from "./modules/calculators.js?v=20260911_v26_tranexamic_pdf";
+import { initConsultationModule } from "./modules/consultation.js?v=20260911_v26_tranexamic_pdf";
+import { initAdrModule } from "./modules/adrReporting.js?v=20260911_v26_tranexamic_pdf";
+import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260911_v26_tranexamic_pdf";
+import { initAuthModule } from "./modules/auth.js?v=20260911_v26_tranexamic_pdf";
+import { syncCustomDrugsFromCloud, openSupabaseModal } from "./modules/supabaseService.js?v=20260911_v26_tranexamic_pdf";
 
 function initApp() {
   console.log("Khởi động ClinicalRx - Nền tảng Thông tin Thuốc & Dược Lâm Sàng (Mobile Optimized)");

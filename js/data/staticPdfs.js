@@ -69,6 +69,15 @@ export const STATIC_PDF_CATALOG = [
     "fileType": "application/pdf"
   },
   {
+    "id": "pdf_1789117144486_a7q1mh",
+    "drugId": "tranexamic_acid",
+    "title": "Acid Tranesamic (Haemostop)",
+    "fileName": "Acid Tranesamic (Haemostop).pdf",
+    "fileUrl": "./assets/pdfs/Acid Tranesamic (Haemostop).pdf",
+    "fileSize": 641263,
+    "fileType": "application/pdf"
+  },
+  {
     "id": "pdf_1788924993207_po67ui",
     "drugId": "amlodipine",
     "title": "Apitim 10mg - Amlodipin",
