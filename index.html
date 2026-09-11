@@ -244,137 +244,257 @@
           </span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           
           <!-- Phân hệ 1: Tra cứu thuốc -->
           <div onclick="window.navigateToSection('drugs')" 
-            class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-teal-500 hover:shadow-lg transition-all duration-200 cursor-pointer group flex flex-col justify-between relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-teal-50 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110 pointer-events-none"></div>
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-teal-50 border border-teal-200/60 text-teal-700 flex items-center justify-center mb-3.5 group-hover:bg-teal-600 group-hover:text-white transition-all shadow-2xs">
-                <i data-lucide="book-open" class="w-6 h-6"></i>
+            class="bg-white rounded-2xl border border-slate-200/90 hover:border-teal-500 hover:shadow-xl transition-all duration-300 cursor-pointer group flex flex-col justify-between overflow-hidden shadow-xs hover:-translate-y-1">
+            
+            <!-- Banner minh họa trực quan Phân hệ 1 -->
+            <div class="h-32 w-full bg-gradient-to-br from-teal-800 via-teal-700 to-emerald-900 relative overflow-hidden flex items-center justify-between px-5">
+              <div class="relative z-10 space-y-1">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-white/20 text-teal-100 backdrop-blur-xs">
+                  <i data-lucide="shield-check" class="w-3 h-3 text-teal-300"></i> DƯỢC THƯ 2022
+                </span>
+                <h4 class="text-white font-black text-base sm:text-lg leading-tight">Chuyên Luận Thuốc</h4>
+                <p class="text-teal-200/90 text-xs font-medium">Bảng liều & Chỉnh suy thận</p>
               </div>
-              <div class="flex items-center justify-between mb-1.5">
-                <h3 class="text-base font-bold text-slate-900 group-hover:text-teal-700 transition-colors">1. Tra cứu thuốc</h3>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200">744 Thuốc</span>
+              <div class="relative z-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-teal-200 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-transform">
+                <i data-lucide="book-open-check" class="w-8 h-8 text-white drop-shadow"></i>
               </div>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Chỉ định, liều lượng, bảng chỉnh liều theo suy thận (CrCl), cảnh báo thai kỳ và 7 phần chuyên sâu chuẩn Dược thư 2022.
-              </p>
+              <!-- Decorative circles & pills -->
+              <div class="absolute -right-6 -bottom-8 w-28 h-28 rounded-full bg-teal-400/20 blur-xl"></div>
+              <div class="absolute left-1/3 -top-6 w-20 h-20 rounded-full bg-white/5"></div>
             </div>
-            <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-teal-700 group-hover:translate-x-0.5 transition-transform">
-              <span>Mở danh mục Dược thư</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+
+            <div class="p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-base font-bold text-slate-900 group-hover:text-teal-700 transition-colors flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-teal-600"></span>
+                    1. Tra cứu thuốc
+                  </h3>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200">744 Thuốc</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  Chỉ định, liều lượng, bảng chỉnh liều theo suy thận (CrCl), cảnh báo thai kỳ và 7 phần chuyên sâu chuẩn Dược thư Quốc gia 2022.
+                </p>
+              </div>
+
+              <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-teal-700 group-hover:translate-x-0.5 transition-transform">
+                <span>Mở danh mục Dược thư</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </div>
             </div>
           </div>
 
           <!-- Phân hệ 2: Tương tác thuốc -->
           <div onclick="window.navigateToSection('interactions')" 
-            class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-rose-500 hover:shadow-lg transition-all duration-200 cursor-pointer group flex flex-col justify-between relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110 pointer-events-none"></div>
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-rose-50 border border-rose-200/60 text-rose-700 flex items-center justify-center mb-3.5 group-hover:bg-rose-600 group-hover:text-white transition-all shadow-2xs">
-                <i data-lucide="layers" class="w-6 h-6"></i>
+            class="bg-white rounded-2xl border border-slate-200/90 hover:border-rose-500 hover:shadow-xl transition-all duration-300 cursor-pointer group flex flex-col justify-between overflow-hidden shadow-xs hover:-translate-y-1">
+            
+            <!-- Banner minh họa trực quan Phân hệ 2 -->
+            <div class="h-32 w-full bg-gradient-to-br from-rose-900 via-rose-800 to-amber-900 relative overflow-hidden flex items-center justify-between px-5">
+              <div class="relative z-10 space-y-1">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-white/20 text-rose-100 backdrop-blur-xs">
+                  <i data-lucide="alert-triangle" class="w-3 h-3 text-amber-300"></i> CYP450 & QT
+                </span>
+                <h4 class="text-white font-black text-base sm:text-lg leading-tight">Tương Tác Đa Thuốc</h4>
+                <p class="text-rose-200/90 text-xs font-medium">Cảnh báo đa chiều & Xử trí</p>
               </div>
-              <div class="flex items-center justify-between mb-1.5">
-                <h3 class="text-base font-bold text-slate-900 group-hover:text-rose-700 transition-colors">2. Tương tác thuốc</h3>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-800 border border-rose-200">Đa thuốc</span>
+              <div class="relative z-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-rose-200 shadow-inner group-hover:scale-110 group-hover:-rotate-3 transition-transform">
+                <i data-lucide="alert-octagon" class="w-8 h-8 text-white drop-shadow"></i>
               </div>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Kiểm tra đồng thời nhiều thuốc trong đơn, cảnh báo tương tác nghiêm trọng, cơ chế enzym gan CYP450 và khuyến cáo xử trí.
-              </p>
+              <!-- Decorative circles & light -->
+              <div class="absolute -right-6 -bottom-8 w-28 h-28 rounded-full bg-rose-400/20 blur-xl"></div>
+              <div class="absolute left-1/3 -top-6 w-20 h-20 rounded-full bg-white/5"></div>
             </div>
-            <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-rose-700 group-hover:translate-x-0.5 transition-transform">
-              <span>Kiểm tra đơn thuốc</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+
+            <div class="p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-base font-bold text-slate-900 group-hover:text-rose-700 transition-colors flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+                    2. Tương tác thuốc
+                  </h3>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-800 border border-rose-200">Đơn thuốc</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  Kiểm tra đồng thời nhiều thuốc trong đơn, cảnh báo tương tác nghiêm trọng, cơ chế enzym gan CYP450 và gợi ý can thiệp lâm sàng.
+                </p>
+              </div>
+
+              <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-rose-700 group-hover:translate-x-0.5 transition-transform">
+                <span>Kiểm tra đơn thuốc</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </div>
             </div>
           </div>
 
           <!-- Phân hệ 3: Công cụ tính toán -->
           <div onclick="window.navigateToSection('calculators')" 
-            class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-500 hover:shadow-lg transition-all duration-200 cursor-pointer group flex flex-col justify-between relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110 pointer-events-none"></div>
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200/60 text-blue-700 flex items-center justify-center mb-3.5 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
-                <i data-lucide="calculator" class="w-6 h-6"></i>
+            class="bg-white rounded-2xl border border-slate-200/90 hover:border-blue-500 hover:shadow-xl transition-all duration-300 cursor-pointer group flex flex-col justify-between overflow-hidden shadow-xs hover:-translate-y-1">
+            
+            <!-- Banner minh họa trực quan Phân hệ 3 -->
+            <div class="h-32 w-full bg-gradient-to-br from-blue-900 via-indigo-800 to-slate-900 relative overflow-hidden flex items-center justify-between px-5">
+              <div class="relative z-10 space-y-1">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-white/20 text-blue-100 backdrop-blur-xs">
+                  <i data-lucide="activity" class="w-3 h-3 text-cyan-300"></i> CÁ THỂ HÓA LIỀU
+                </span>
+                <h4 class="text-white font-black text-base sm:text-lg leading-tight">Máy Tính Y Khoa</h4>
+                <p class="text-blue-200/90 text-xs font-medium">CrCl, eGFR, TDM, Corticoid</p>
               </div>
-              <div class="flex items-center justify-between mb-1.5">
-                <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">3. Công cụ tính toán</h3>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200">Lâm sàng</span>
+              <div class="relative z-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-blue-200 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-transform">
+                <i data-lucide="calculator" class="w-8 h-8 text-white drop-shadow"></i>
               </div>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Thước tính Cockcroft-Gault, CKD-EPI 2021, BMI, BSA diện tích da, quy đổi liều tương đương Corticoid và liều TDM Vancomycin.
-              </p>
+              <!-- Decorative circles & light -->
+              <div class="absolute -right-6 -bottom-8 w-28 h-28 rounded-full bg-blue-400/20 blur-xl"></div>
+              <div class="absolute left-1/3 -top-6 w-20 h-20 rounded-full bg-white/5"></div>
             </div>
-            <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-700 group-hover:translate-x-0.5 transition-transform">
-              <span>Mở bộ máy tính y khoa</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+
+            <div class="p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                    3. Công cụ tính toán
+                  </h3>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200">Lâm sàng</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  Thước tính Cockcroft-Gault, CKD-EPI 2021, BMI, BSA diện tích da, quy đổi liều tương đương Corticoid và liều nạp Vancomycin.
+                </p>
+              </div>
+
+              <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-700 group-hover:translate-x-0.5 transition-transform">
+                <span>Mở bộ máy tính y khoa</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </div>
             </div>
           </div>
 
           <!-- Phân hệ 4: Tương hợp - Tương kỵ -->
           <div onclick="window.navigateToSection('iv')" 
-            class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-amber-500 hover:shadow-lg transition-all duration-200 cursor-pointer group flex flex-col justify-between relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110 pointer-events-none"></div>
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200/60 text-amber-700 flex items-center justify-center mb-3.5 group-hover:bg-amber-600 group-hover:text-white transition-all shadow-2xs">
-                <i data-lucide="git-merge" class="w-6 h-6"></i>
+            class="bg-white rounded-2xl border border-slate-200/90 hover:border-amber-500 hover:shadow-xl transition-all duration-300 cursor-pointer group flex flex-col justify-between overflow-hidden shadow-xs hover:-translate-y-1">
+            
+            <!-- Banner minh họa trực quan Phân hệ 4 -->
+            <div class="h-32 w-full bg-gradient-to-br from-amber-900 via-amber-800 to-orange-950 relative overflow-hidden flex items-center justify-between px-5">
+              <div class="relative z-10 space-y-1">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-white/20 text-amber-100 backdrop-blur-xs">
+                  <i data-lucide="git-merge" class="w-3 h-3 text-amber-300"></i> TIÊM TRUYỀN Y-SITE
+                </span>
+                <h4 class="text-white font-black text-base sm:text-lg leading-tight">Tương Hợp - Kỵ Thuốc</h4>
+                <p class="text-amber-200/90 text-xs font-medium">Dịch truyền & Đường tĩnh mạch</p>
               </div>
-              <div class="flex items-center justify-between mb-1.5">
-                <h3 class="text-base font-bold text-slate-900 group-hover:text-amber-700 transition-colors">4. Tương hợp - Tương kỵ</h3>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">Đường truyền Y-site</span>
+              <div class="relative z-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-amber-200 shadow-inner group-hover:scale-110 group-hover:-rotate-3 transition-transform">
+                <i data-lucide="flask-conical" class="w-8 h-8 text-white drop-shadow"></i>
               </div>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Tra cứu tương hợp dịch pha (NaCl 0.9%, Glucose 5%, Ringer) và tương kỵ vật lý - hóa học khi tiêm truyền tĩnh mạch đồng thời.
-              </p>
+              <!-- Decorative circles & light -->
+              <div class="absolute -right-6 -bottom-8 w-28 h-28 rounded-full bg-amber-400/20 blur-xl"></div>
+              <div class="absolute left-1/3 -top-6 w-20 h-20 rounded-full bg-white/5"></div>
             </div>
-            <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-amber-700 group-hover:translate-x-0.5 transition-transform">
-              <span>Tra cứu tương hợp tiêm truyền</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+
+            <div class="p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-base font-bold text-slate-900 group-hover:text-amber-700 transition-colors flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-amber-600"></span>
+                    4. Tương hợp - Tương kỵ
+                  </h3>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">Y-site</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  Tra cứu độ ổn định trong dung môi (NaCl 0.9%, D5W, Ringer) và cảnh báo kết tủa, biến màu khi truyền chung qua chạc chữ Y.
+                </p>
+              </div>
+
+              <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-amber-700 group-hover:translate-x-0.5 transition-transform">
+                <span>Tra cứu tương hợp tiêm truyền</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </div>
             </div>
           </div>
 
           <!-- Phân hệ 5: Hội chẩn lâm sàng -->
           <div onclick="window.navigateToSection('consultation')" 
-            class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-emerald-500 hover:shadow-lg transition-all duration-200 cursor-pointer group flex flex-col justify-between relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110 pointer-events-none"></div>
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200/60 text-emerald-700 flex items-center justify-center mb-3.5 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-2xs">
-                <i data-lucide="messages-square" class="w-6 h-6"></i>
+            class="bg-white rounded-2xl border border-slate-200/90 hover:border-emerald-500 hover:shadow-xl transition-all duration-300 cursor-pointer group flex flex-col justify-between overflow-hidden shadow-xs hover:-translate-y-1">
+            
+            <!-- Banner minh họa trực quan Phân hệ 5 -->
+            <div class="h-32 w-full bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-950 relative overflow-hidden flex items-center justify-between px-5">
+              <div class="relative z-10 space-y-1">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-white/20 text-emerald-100 backdrop-blur-xs">
+                  <i data-lucide="users" class="w-3 h-3 text-emerald-300"></i> KẾT NỐI BÁC SĨ - DƯỢC SĨ
+                </span>
+                <h4 class="text-white font-black text-base sm:text-lg leading-tight">Hội Chẩn Lâm Sàng</h4>
+                <p class="text-emerald-200/90 text-xs font-medium">Tư vấn thông tin thuốc & EBM</p>
               </div>
-              <div class="flex items-center justify-between mb-1.5">
-                <h3 class="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">5. Hội chẩn lâm sàng</h3>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">Bác sĩ ⟷ Dược sĩ</span>
+              <div class="relative z-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-emerald-200 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-transform">
+                <i data-lucide="messages-square" class="w-8 h-8 text-white drop-shadow"></i>
               </div>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Kênh trao đổi chuyên môn trực tiếp giữa Bác sĩ điều trị và Dược sĩ lâm sàng: Tư vấn phác đồ, TDM và hỗ trợ y học chứng cứ.
-              </p>
+              <!-- Decorative circles & light -->
+              <div class="absolute -right-6 -bottom-8 w-28 h-28 rounded-full bg-emerald-400/20 blur-xl"></div>
+              <div class="absolute left-1/3 -top-6 w-20 h-20 rounded-full bg-white/5"></div>
             </div>
-            <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-700 group-hover:translate-x-0.5 transition-transform">
-              <span>Gửi ca bệnh & Phản hồi</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+
+            <div class="p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                    5. Hội chẩn lâm sàng
+                  </h3>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">Trực tuyến</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  Bác sĩ gửi ca bệnh phức tạp, Dược sĩ lâm sàng thường trực phản hồi theo y học chứng cứ, có trợ lý AI hỗ trợ tra cứu hướng dẫn.
+                </p>
+              </div>
+
+              <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-700 group-hover:translate-x-0.5 transition-transform">
+                <span>Gửi ca bệnh & Phản hồi</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </div>
             </div>
           </div>
 
           <!-- Phân hệ 6: Báo cáo ADR -->
           <div onclick="window.navigateToSection('adr')" 
-            class="bg-white p-5 rounded-2xl border border-slate-200 hover:border-purple-500 hover:shadow-lg transition-all duration-200 cursor-pointer group flex flex-col justify-between relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-bl-full -mr-6 -mt-6 transition-transform group-hover:scale-110 pointer-events-none"></div>
-            <div>
-              <div class="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200/60 text-purple-700 flex items-center justify-center mb-3.5 group-hover:bg-purple-600 group-hover:text-white transition-all shadow-2xs">
-                <i data-lucide="clipboard-pen-line" class="w-6 h-6"></i>
+            class="bg-white rounded-2xl border border-slate-200/90 hover:border-purple-500 hover:shadow-xl transition-all duration-300 cursor-pointer group flex flex-col justify-between overflow-hidden shadow-xs hover:-translate-y-1">
+            
+            <!-- Banner minh họa trực quan Phân hệ 6 -->
+            <div class="h-32 w-full bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-950 relative overflow-hidden flex items-center justify-between px-5">
+              <div class="relative z-10 space-y-1">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-white/20 text-purple-100 backdrop-blur-xs">
+                  <i data-lucide="clipboard-check" class="w-3 h-3 text-purple-300"></i> BẢO ĐẢM AN TOÀN THUỐC
+                </span>
+                <h4 class="text-white font-black text-base sm:text-lg leading-tight">Báo Cáo Biến Cố ADR</h4>
+                <p class="text-purple-200/90 text-xs font-medium">Mẫu BYT & Thang điểm Naranjo</p>
               </div>
-              <div class="flex items-center justify-between mb-1.5">
-                <h3 class="text-base font-bold text-slate-900 group-hover:text-purple-700 transition-colors">6. Báo cáo ADR</h3>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-purple-800 border border-purple-200">Mẫu Bộ Y Tế</span>
+              <div class="relative z-10 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-purple-200 shadow-inner group-hover:scale-110 group-hover:-rotate-3 transition-transform">
+                <i data-lucide="clipboard-pen-line" class="w-8 h-8 text-white drop-shadow"></i>
               </div>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Báo cáo phản ứng có hại của thuốc theo biểu mẫu chuẩn, tích hợp thang điểm thuật toán thẩm định nhân quả Naranjo.
-              </p>
+              <!-- Decorative circles & light -->
+              <div class="absolute -right-6 -bottom-8 w-28 h-28 rounded-full bg-purple-400/20 blur-xl"></div>
+              <div class="absolute left-1/3 -top-6 w-20 h-20 rounded-full bg-white/5"></div>
             </div>
-            <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-purple-700 group-hover:translate-x-0.5 transition-transform">
-              <span>Gửi báo cáo ADR</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+
+            <div class="p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-base font-bold text-slate-900 group-hover:text-purple-700 transition-colors flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-purple-600"></span>
+                    6. Báo cáo ADR
+                  </h3>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-purple-800 border border-purple-200">Mẫu Bộ Y Tế</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  Biểu mẫu báo cáo phản ứng có hại của thuốc theo TT 22/2011/TT-BYT, tích hợp thuật toán thẩm định nhân quả Naranjo 10 điểm.
+                </p>
+              </div>
+
+              <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-purple-700 group-hover:translate-x-0.5 transition-transform">
+                <span>Gửi báo cáo ADR</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </div>
             </div>
           </div>
 
@@ -1592,7 +1712,7 @@
   </script>
 
   <!-- Master Application Script (ES Module) -->
-  <script type="module" src="./js/app.js?v=20260910_v18_home_streamlined"></script>
+  <script type="module" src="./js/app.js?v=20260911_v19_home_card_banners"></script>
 
 </body>
 </html>
