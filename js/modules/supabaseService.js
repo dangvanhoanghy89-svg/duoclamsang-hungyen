@@ -216,7 +216,17 @@ export async function syncCustomDrugsFromCloud() {
 
     if (Array.isArray(data) && data.length > 0) {
       const raw = localStorage.getItem(CUSTOM_DRUGS_STORAGE_KEY);
-      const store = raw ? JSON.parse(raw) : { deletedIds: [], modified: {}, addedDrugs: [] };
+      let store;
+      try {
+        if (raw && (/[\x00-\x08\x0B\x0C\x0E-\x1F]/.test(raw) || raw.includes("\\u0010") || raw.includes("\\u0001"))) {
+          console.log("Phát hiện bộ nhớ cache cũ bị lỗi font ký tự lạ, tiến hành dọn sạch và nạp dữ liệu chuẩn từ Cloud...");
+          store = { deletedIds: [], modified: {}, addedDrugs: [] };
+        } else {
+          store = raw ? JSON.parse(raw) : { deletedIds: [], modified: {}, addedDrugs: [] };
+        }
+      } catch (pe) {
+        store = { deletedIds: [], modified: {}, addedDrugs: [] };
+      }
       if (!store.addedDrugs) store.addedDrugs = [];
 
       if (!store.modified) store.modified = {};

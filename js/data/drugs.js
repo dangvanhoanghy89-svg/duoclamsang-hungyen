@@ -4,7 +4,7 @@
  * Phân loại theo 14 nhóm giải phẫu - điều trị - hóa học (ATC Code A - V)
  */
 
-import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v28_autoheal_pdf";
+import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v29_fix_font_encoding";
 
 export const ATC_CATEGORIES = [
   { code: "all", name: "Tất cả 14 nhóm ATC (Dược thư 2022)" },
@@ -38546,8 +38546,12 @@ export function getActiveDrugsDatabase() {
 
     if (raw) {
       try {
-        const store = JSON.parse(raw);
-        // 1. Lọc bỏ các thuốc bị Quản trị viên xóa
+        if (/[\x00-\x08\x0B\x0C\x0E-\x1F]/.test(raw) || raw.includes("\\u0010") || raw.includes("\\u0001")) {
+          console.warn("Dọn sạch bộ nhớ cache bị lỗi font ký tự lạ.");
+          localStorage.removeItem(CUSTOM_DRUGS_STORAGE_KEY);
+        } else {
+          const store = JSON.parse(raw);
+          // 1. Lọc bỏ các thuốc bị Quản trị viên xóa
         if (Array.isArray(store.deletedIds) && store.deletedIds.length > 0) {
           list = list.filter(d => !store.deletedIds.includes(d.id));
         }
@@ -38560,6 +38564,7 @@ export function getActiveDrugsDatabase() {
           // Lọc trùng ID nếu đã có trong DRUGS_DATABASE
           const addedFiltered = store.addedDrugs.filter(ad => !list.some(d => d.id === ad.id));
           list = [...addedFiltered, ...list];
+        }
         }
       } catch (parseErr) {
         console.warn("Lỗi khi giải mã localStorage custom drugs:", parseErr);

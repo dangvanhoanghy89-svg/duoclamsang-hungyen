@@ -2,14 +2,14 @@
  * PHARMAVITA / CLINICALRX - CORE APPLICATION ENTRY POINT
  */
 
-import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260911_v28_autoheal_pdf";
-import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260911_v28_autoheal_pdf";
-import { initCalculators } from "./modules/calculators.js?v=20260911_v28_autoheal_pdf";
-import { initConsultationModule } from "./modules/consultation.js?v=20260911_v28_autoheal_pdf";
-import { initAdrModule } from "./modules/adrReporting.js?v=20260911_v28_autoheal_pdf";
-import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260911_v28_autoheal_pdf";
-import { initAuthModule } from "./modules/auth.js?v=20260911_v28_autoheal_pdf";
-import { syncCustomDrugsFromCloud, openSupabaseModal } from "./modules/supabaseService.js?v=20260911_v28_autoheal_pdf";
+import { initDrugDirectory } from "./modules/drugDirectory.js?v=20260911_v29_fix_font_encoding";
+import { initInteractionChecker } from "./modules/interactionCheck.js?v=20260911_v29_fix_font_encoding";
+import { initCalculators } from "./modules/calculators.js?v=20260911_v29_fix_font_encoding";
+import { initConsultationModule } from "./modules/consultation.js?v=20260911_v29_fix_font_encoding";
+import { initAdrModule } from "./modules/adrReporting.js?v=20260911_v29_fix_font_encoding";
+import { initIvCompatibilityModule } from "./modules/ivCheck.js?v=20260911_v29_fix_font_encoding";
+import { initAuthModule } from "./modules/auth.js?v=20260911_v29_fix_font_encoding";
+import { syncCustomDrugsFromCloud, openSupabaseModal } from "./modules/supabaseService.js?v=20260911_v29_fix_font_encoding";
 
 function initApp() {
   console.log("Khởi động ClinicalRx - Nền tảng Thông tin Thuốc & Dược Lâm Sàng (Mobile Optimized)");
