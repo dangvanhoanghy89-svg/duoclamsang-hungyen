@@ -4,7 +4,7 @@
  * Tích hợp lưu trữ vĩnh viễn trong kho GitHub (assets/pdfs/) và bộ nhớ IndexedDB
  */
 
-import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v26_tranexamic_pdf";
+import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v27_cloud_pdf_sync";
 
 const DB_NAME = "ClinicalRx_PDF_Store_v1";
 const DB_VERSION = 1;
@@ -56,7 +56,20 @@ export async function getPdfAttachmentById(id) {
   const staticAtt = STATIC_PDF_CATALOG.find(a => a.id === id || a.fileName === id);
   if (staticAtt) return staticAtt;
 
-  // 2. Kiểm tra trong cơ sở dữ liệu IndexedDB của trình duyệt
+  // 2. Kiểm tra trong danh mục thuốc hiện hành (bao gồm thuốc đồng bộ từ Supabase Cloud)
+  if (typeof window !== "undefined" && window.getActiveDrugsDatabase) {
+    try {
+      const drugs = window.getActiveDrugsDatabase();
+      for (const d of drugs) {
+        if (Array.isArray(d.attachments)) {
+          const found = d.attachments.find(a => a.id === id || a.fileName === id);
+          if (found) return found;
+        }
+      }
+    } catch (e) {}
+  }
+
+  // 3. Kiểm tra trong cơ sở dữ liệu IndexedDB của trình duyệt
   try {
     const db = await openPDFDatabase();
     return new Promise((resolve) => {

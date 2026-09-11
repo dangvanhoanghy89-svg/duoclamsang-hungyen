@@ -4,7 +4,7 @@
  * Phân loại theo 14 nhóm giải phẫu - điều trị - hóa học (ATC Code A - V)
  */
 
-import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v26_tranexamic_pdf";
+import { STATIC_PDF_CATALOG } from "./staticPdfs.js?v=20260911_v27_cloud_pdf_sync";
 
 export const ATC_CATEGORIES = [
   { code: "all", name: "Tất cả 14 nhóm ATC (Dược thư 2022)" },
@@ -38724,9 +38724,16 @@ export async function syncCustomDrugsFromSupabase() {
       if (!store.addedDrugs) store.addedDrugs = [];
 
       let hasChanges = false;
+      if (!store.modified) store.modified = {};
+      if (!store.addedDrugs) store.addedDrugs = [];
+
       data.forEach(row => {
         const drug = row.data || row;
         if (!drug || !drug.id) return;
+        
+        // Luôn lưu vào modified để áp dụng cho cả thuốc trong cơ sở dữ liệu gốc (như Tranexamic, Vitamin 3B)
+        store.modified[drug.id] = drug;
+
         const idx = store.addedDrugs.findIndex(d => d.id === drug.id);
         if (idx >= 0) {
           store.addedDrugs[idx] = drug;
@@ -38746,4 +38753,9 @@ export async function syncCustomDrugsFromSupabase() {
     console.warn("Lỗi khi đồng bộ Supabase Cloud:", err);
   }
   return false;
+}
+
+if (typeof window !== "undefined") {
+  window.getActiveDrugsDatabase = getActiveDrugsDatabase;
+  window.syncCustomDrugsFromSupabase = syncCustomDrugsFromSupabase;
 }

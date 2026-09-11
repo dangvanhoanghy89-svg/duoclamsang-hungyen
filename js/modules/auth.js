@@ -1899,13 +1899,27 @@ export function openQuickPdfModal(drugId) {
           if (att.dataUrl) {
             await savePdfAttachment({ ...att, drugId: drug.id });
           }
+
+          let cloudUrl = att.fileUrl || "";
+          // Nếu file mới tải từ máy tính và chưa có URL online, tự động upload lên Supabase Storage
+          if (!cloudUrl && att.dataUrl && typeof window !== "undefined" && window.uploadPdfToSupabaseStorage) {
+            try {
+              const uploaded = await window.uploadPdfToSupabaseStorage(att.dataUrl, drug.id, att.fileName);
+              if (uploaded) {
+                cloudUrl = uploaded;
+              }
+            } catch (upErr) {
+              console.warn("Không thể upload PDF lên cloud:", upErr);
+            }
+          }
+
           attachmentsMeta.push({
             id: att.id,
             title: att.title || att.fileName,
             fileName: att.fileName,
             fileSize: att.fileSize || 0,
             fileType: att.fileType || "application/pdf",
-            fileUrl: att.fileUrl || "",
+            fileUrl: cloudUrl,
             uploadedAt: att.uploadedAt || new Date().toISOString()
           });
         }
@@ -2000,19 +2014,33 @@ export async function handleSaveDrugForm(event) {
     });
   }
 
-  // Lưu các file PDF có dataUrl vào IndexedDB
+  // Lưu các file PDF có dataUrl vào IndexedDB & Cloud Storage
   const attachmentsMeta = [];
   for (const att of currentFormAttachments) {
     if (att.dataUrl) {
       await savePdfAttachment({ ...att, drugId: id });
     }
+
+    let cloudUrl = att.fileUrl || "";
+    // Nếu file mới tải từ máy tính và chưa có URL online, tự động upload lên Supabase Storage
+    if (!cloudUrl && att.dataUrl && typeof window !== "undefined" && window.uploadPdfToSupabaseStorage) {
+      try {
+        const uploaded = await window.uploadPdfToSupabaseStorage(att.dataUrl, id, att.fileName);
+        if (uploaded) {
+          cloudUrl = uploaded;
+        }
+      } catch (upErr) {
+        console.warn("Không thể upload PDF lên cloud:", upErr);
+      }
+    }
+
     attachmentsMeta.push({
       id: att.id,
       title: att.title || att.fileName,
       fileName: att.fileName,
       fileSize: att.fileSize || 0,
       fileType: att.fileType || "application/pdf",
-      fileUrl: att.fileUrl || "",
+      fileUrl: cloudUrl,
       uploadedAt: att.uploadedAt || new Date().toISOString()
     });
   }

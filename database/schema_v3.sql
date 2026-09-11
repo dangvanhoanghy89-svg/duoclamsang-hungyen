@@ -181,3 +181,22 @@ create policy "Allow delete custom_drugs" on public.custom_drugs
 
 grant all on public.custom_drugs to anon, authenticated, service_role;
 
+-- ==============================================================================
+-- 5. KHO LƯU TRỮ FILE PDF THUỐC ĐỒNG BỘ ĐÁM MÂY (SUPABASE STORAGE: drug-pdfs)
+-- Cho phép tải lên và xem tài liệu PDF trực tuyến giữa mọi máy tính và điện thoại
+-- ==============================================================================
+insert into storage.buckets (id, name, public)
+values ('drug-pdfs', 'drug-pdfs', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "Public read drug-pdfs" on storage.objects;
+create policy "Public read drug-pdfs" on storage.objects for select using (bucket_id = 'drug-pdfs');
+
+drop policy if exists "Public insert drug-pdfs" on storage.objects;
+create policy "Public insert drug-pdfs" on storage.objects for insert with check (bucket_id = 'drug-pdfs');
+
+drop policy if exists "Public update drug-pdfs" on storage.objects;
+create policy "Public update drug-pdfs" on storage.objects for update using (bucket_id = 'drug-pdfs');
+
+drop policy if exists "Public delete drug-pdfs" on storage.objects;
+create policy "Public delete drug-pdfs" on storage.objects for delete using (bucket_id = 'drug-pdfs');

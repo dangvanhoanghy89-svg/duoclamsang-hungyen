@@ -121,6 +121,23 @@ grant all on public.custom_drugs to anon, authenticated, service_role;
 grant all on public.consultations to anon, authenticated, service_role;
 grant all on public.adr_reports to anon, authenticated, service_role;
 grant all on public.profiles to anon, authenticated, service_role;
+
+-- 5. KHO LƯU TRỮ FILE PDF THUỐC ĐỒNG BỘ ĐÁM MÂY (SUPABASE STORAGE: drug-pdfs)
+insert into storage.buckets (id, name, public) 
+values ('drug-pdfs', 'drug-pdfs', true) 
+on conflict (id) do update set public = true;
+
+drop policy if exists "Public read drug-pdfs" on storage.objects;
+create policy "Public read drug-pdfs" on storage.objects for select using (bucket_id = 'drug-pdfs');
+
+drop policy if exists "Public insert drug-pdfs" on storage.objects;
+create policy "Public insert drug-pdfs" on storage.objects for insert with check (bucket_id = 'drug-pdfs');
+
+drop policy if exists "Public update drug-pdfs" on storage.objects;
+create policy "Public update drug-pdfs" on storage.objects for update using (bucket_id = 'drug-pdfs');
+
+drop policy if exists "Public delete drug-pdfs" on storage.objects;
+create policy "Public delete drug-pdfs" on storage.objects for delete using (bucket_id = 'drug-pdfs');
 `;
 
 export function getSupabaseClient() {
@@ -167,9 +184,19 @@ export async function testSupabaseConnection(customUrl = null, customKey = null)
       }
       return { ok: false, message: `Lỗi từ Supabase: ${error.message}` };
     }
+    let storageStatus = "";
+    try {
+      const { data: buckets } = await testClient.storage.listBuckets();
+      if (buckets && buckets.some(b => b.name === "drug-pdfs" || b.id === "drug-pdfs")) {
+        storageStatus = " | Kho lưu trữ PDF Cloud (Storage: drug-pdfs) đã SẴN SÀNG!";
+      } else {
+        storageStatus = " | Lưu ý: Cần bấm nút sao chép mã SQL bên dưới chạy trong SQL Editor để kích hoạt Kho PDF liên máy (drug-pdfs).";
+      }
+    } catch (stErr) {}
+
     return {
       ok: true,
-      message: "Kết nối thành công! Đã kết nối thông suốt với Cơ sở dữ liệu Supabase Cloud."
+      message: "Kết nối thành công! Đã kết nối thông suốt với Cơ sở dữ liệu Supabase Cloud." + storageStatus
     };
   } catch (err) {
     return { ok: false, message: `Lỗi kết nối mạng: ${err.message}` };
@@ -192,9 +219,16 @@ export async function syncCustomDrugsFromCloud() {
       const store = raw ? JSON.parse(raw) : { deletedIds: [], modified: {}, addedDrugs: [] };
       if (!store.addedDrugs) store.addedDrugs = [];
 
+      if (!store.modified) store.modified = {};
+      if (!store.addedDrugs) store.addedDrugs = [];
+
       data.forEach(row => {
         const drug = row.data || row;
         if (!drug || !drug.id) return;
+        
+        // Luôn lưu vào modified để áp dụng cho cả thuốc trong cơ sở dữ liệu gốc (như Tranexamic, Vitamin 3B)
+        store.modified[drug.id] = drug;
+
         const idx = store.addedDrugs.findIndex(d => d.id === drug.id);
         if (idx >= 0) {
           store.addedDrugs[idx] = drug;
@@ -251,6 +285,81 @@ export async function deleteDrugFromCloud(drugId) {
   } catch (e) {
     console.warn("Lỗi deleteDrugFromCloud:", e);
     return false;
+  }
+}
+
+
+export function dataUrlToBlob(dataUrl) {
+  try {
+    const parts = dataUrl.split(";base64,");
+    const contentType = parts[0].split(":")[1] || "application/pdf";
+    const raw = atob(parts[1]);
+    const rawLength = raw.length;
+    const uInt8Array = new Uint8Array(rawLength);
+    for (let i = 0; i < rawLength; ++i) {
+      uInt8Array[i] = raw.charCodeAt(i);
+    }
+    return new Blob([uInt8Array], { type: contentType });
+  } catch (err) {
+    console.error("Lỗi chuyển đổi DataURL sang Blob:", err);
+    return null;
+  }
+}
+
+export function sanitizeFileName(name) {
+  return (name || "document.pdf")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d").replace(/Đ/g, "D")
+    .replace(/[^a-zA-Z0-9._-]/g, "_");
+}
+
+export async function uploadPdfToSupabaseStorage(fileOrDataUrl, drugId, fileName) {
+  const client = getSupabaseClient();
+  if (!client) {
+    console.warn("Chưa kết nối Supabase client để upload PDF.");
+    return null;
+  }
+
+  try {
+    let blob = null;
+    if (typeof fileOrDataUrl === "string" && fileOrDataUrl.startsWith("data:")) {
+      blob = dataUrlToBlob(fileOrDataUrl);
+    } else if (fileOrDataUrl instanceof Blob || fileOrDataUrl instanceof File) {
+      blob = fileOrDataUrl;
+    }
+
+    if (!blob) {
+      console.warn("Dữ liệu PDF không hợp lệ để tải lên Supabase.");
+      return null;
+    }
+
+    const cleanName = sanitizeFileName(fileName || "document.pdf");
+    const safeDrugId = sanitizeFileName(drugId || "general");
+    const storagePath = `${safeDrugId}/${Date.now()}_${cleanName}`;
+
+    const { data, error } = await client.storage
+      .from("drug-pdfs")
+      .upload(storagePath, blob, {
+        contentType: "application/pdf",
+        upsert: true
+      });
+
+    if (error) {
+      console.warn("Lỗi tải PDF lên Supabase Storage:", error.message);
+      return null;
+    }
+
+    const { data: publicData } = client.storage
+      .from("drug-pdfs")
+      .getPublicUrl(storagePath);
+
+    const publicUrl = publicData?.publicUrl || null;
+    console.log("Đã tải PDF lên Supabase Storage thành công:", publicUrl);
+    return publicUrl;
+  } catch (err) {
+    console.warn("Lỗi uploadPdfToSupabaseStorage:", err);
+    return null;
   }
 }
 
@@ -439,5 +548,7 @@ if (typeof window !== "undefined") {
   window.saveDrugToCloud = saveDrugToCloud;
   window.deleteDrugFromCloud = deleteDrugFromCloud;
   window.syncCustomDrugsFromCloud = syncCustomDrugsFromCloud;
+  window.uploadPdfToSupabaseStorage = uploadPdfToSupabaseStorage;
+  window.dataUrlToBlob = dataUrlToBlob;
 }
 
