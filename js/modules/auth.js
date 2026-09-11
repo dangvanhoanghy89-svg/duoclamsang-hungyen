@@ -1402,11 +1402,11 @@ function renderDrugFormModal(drug) {
             </div>
           </div>
 
-          <!-- PHẦN 6: CÁCH DÙNG & LƯU Ý LÂM SÀNG -->
+          <!-- PHẦN 6: LƯU Ý DƯỢC LÂM SÀNG CHUYÊN SÂU & GIÁM SÁT TDM -->
           <div id="formSection6" class="space-y-3 pt-2">
             <div class="font-bold text-slate-900 border-b border-slate-200 pb-1.5 flex items-center gap-1.5 text-xs uppercase tracking-wider">
-              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-600"></i>
-              <span>6. Hướng dẫn pha truyền & Lưu ý Dược lâm sàng (Clinical Pearls)</span>
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i>
+              <span>6. Lưu Ý Dược Lâm Sàng Chuyên Sâu & Giám Sát TDM (Clinical Pearls & TDM)</span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1418,6 +1418,13 @@ function renderDrugFormModal(drug) {
                 <label class="font-bold text-slate-700 block mb-1">Lưu ý Dược lâm sàng chuyên sâu (Clinical Pearls):</label>
                 <textarea id="formDrugClinicalPearls" rows="3" class="w-full p-2.5 border border-slate-300 rounded-xl" placeholder="Kéo dài thời gian truyền (truyền 3 giờ) giúp tối ưu hóa %T>MIC đối với vi khuẩn Gram âm đa kháng...">${drug ? (drug.clinicalPearls || '') : ''}</textarea>
               </div>
+            </div>
+            <div>
+              <label class="font-bold text-blue-900 block mb-1 flex items-center gap-1.5 text-xs">
+                <i data-lucide="gauge" class="w-4 h-4 text-blue-600"></i>
+                Mục tiêu giám sát nồng độ thuốc trong máu (TDM Target & Khoảng điều trị):
+              </label>
+              <input id="formDrugTdmTarget" type="text" value="${drug ? (drug.tdmTarget || '') : ''}" placeholder="VD: AUC24/MIC = 400 - 600 mg·h/L hoặc Nồng độ đáy 15 - 20 mcg/mL..." class="w-full p-2.5 border border-blue-200 rounded-xl bg-blue-50/30 text-blue-950 font-medium">
             </div>
           </div>
 
@@ -1956,6 +1963,7 @@ export async function handleSaveDrugForm(event) {
   const adrSeriousInput = document.getElementById("formDrugAdrSerious");
   const adminInput = document.getElementById("formDrugAdministration");
   const pearlsInput = document.getElementById("formDrugClinicalPearls");
+  const tdmTargetInput = document.getElementById("formDrugTdmTarget");
 
   const name = nameInput.value.trim();
   const inn = innInput.value.trim();
@@ -2036,7 +2044,7 @@ export async function handleSaveDrugForm(event) {
     },
     pregnancyCategory: (pregnancyInput && pregnancyInput.value) || (existingDrug?.pregnancyCategory || "C"),
     lactation: (lactationInput && lactationInput.value.trim()) || (existingDrug?.lactation || "Thận trọng"),
-    tdmTarget: existingDrug?.tdmTarget || "Theo dõi lâm sàng",
+    tdmTarget: (tdmTargetInput && tdmTargetInput.value.trim()) || existingDrug?.tdmTarget || "Theo dõi lâm sàng",
     clinicalPearls: (pearlsInput && pearlsInput.value.trim()) || (existingDrug?.clinicalPearls || "Thuốc được cập nhật bởi Quản trị viên Khoa Dược BVĐK tỉnh Hưng Yên."),
     attachments: attachmentsMeta
   };
